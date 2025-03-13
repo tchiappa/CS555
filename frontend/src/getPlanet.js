@@ -38,6 +38,7 @@ function getPlanet({ children = [], distance = 0, img = "", size = 1 }) {
     });
   };
   orbitGroup.add(planet);
+  orbitGroup.name = img.split(".")[0];
   return orbitGroup;
 }
 
