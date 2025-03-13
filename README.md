@@ -1,43 +1,97 @@
-# Project Setup Guide
+# Development Environment Setup
+This guide outlines how to set up and run the local development environment for the project.
 
 ## Prerequisites
-
 Ensure you have the following installed on your system:
+- **Node.js** (Latest LTS recommended)
+- **npm** (Comes with Node.js)
+- **MongoDB** (If not using Docker)
+- **Git** (For version control)
+- **Docker & Docker Compose** (Optional, for containerized setup)
 
-- [Node.js](https://nodejs.org/)
-- [npm](https://www.npmjs.com/)
-- [MongoDB](https://www.mongodb.com/try/download/community)
 
-## Setup Local Development (BackEnd)
-
-### 1. Clone the Repository
-
+## Clone the Repository
 ```sh
 git clone git@github.com:tchiappa/CS555.git
-cd CS555/backend/
 ```
 
-### 2. Install Dependencies
-
+## Project Structure
 ```sh
-npm install
+/project-root
+│── /backend       # Express.js server
+│── /frontend      # React (Vite) client
+│── /data          # (Optional) MongoDB data storage
+│── docker-compose.yml  # (Optional) Containerized setup
+│── README.md      # Documentation
 ```
 
-### 3. Start the MongoDB Server
-
-Ensure you are in the `backend` directory and run:
-
+## Environment Variables
+Create a `.env` file in the `/backend` directory with:
 ```sh
-mkdir -p data/db
-mongod --dbpath data/db/
+dbURI="mongodb://localhost:27017/test"
+port=4000
+baseURL="http:localhost:"
 ```
+Modify values as needed.
 
-### 4. Start the Express Server
+## Running with Docker Compose (Optional)
+Instead of running each service manually, you can use `docker-compose` to start everything at once.
 
-Open a new terminal, navigate to the `backend` directory, and run:
+1. Ensure Docker and Docker Compose are installed.
+2. In the project root, run:
+   ```sh
+   docker-compose up --build
+   ```
+3. This will start:
+    - The backend at `http://localhost:4000`
+    - The frontend at `http://localhost:5173`
+    - MongoDB at `mongodb://localhost:27017`
+4. To stop the containers, run:
+    ```sh
+    docker-compose down
+    ```
 
-```sh
-npm run dev
-```
+## Running the Full Stack (Without Docker)
+Start the backend and frontend servers separately:
 
-Your backend application should now be running successfully!
+### Backend Setup (Express.js)
+1. Navigate to the `/backend` directory:
+   ```sh
+   cd backend
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Start the backend server:
+   ```sh
+   npm run dev
+   ```
+4. The backend should now be running at `http://localhost:4000`.
+
+### Frontend Setup (Vite + React)
+1. Navigate to the `/frontend` directory:
+   ```sh
+   cd frontend
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Start the frontend server:
+   ```sh
+   npm run dev
+   ```
+4. The frontend should now be available at `http://localhost:5173`.
+
+### Database Setup (MongoDB)
+Ensure MongoDB is running locally on `localhost:27017`. If MongoDB is not running:
+- Start the service (for Linux/macOS):
+  ```sh
+  mongod --dbpath ./data
+  ```
+
+## Once everything is running (Docker and Direct):
+- **Backend API:** `http://localhost:4000`
+- **Frontend UI:** `http://localhost:5173`
+- **Database:** `mongodb://localhost:27017`
