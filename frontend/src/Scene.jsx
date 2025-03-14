@@ -16,6 +16,8 @@ export function Scene() {
     setPopUp(true);
   }, "2000");
 
+  const [planets, setPlanets] = useState({});
+
   useEffect(() => {
     let useAnimatedCamera = true;
     const cameraDistance = 5;
@@ -51,8 +53,8 @@ export function Scene() {
 
     function animate(t = 0) {
       const time = t * 0.0005;
-      requestAnimationFrame(animate);
-      solarSystem.userData.update(time);
+      // requestAnimationFrame(animate);
+      // solarSystem.userData.update(time);
       renderer.render(scene, camera);
       if (useAnimatedCamera) {
         camera.position.x = Math.cos(time * 0.75) * cameraDistance;
@@ -177,7 +179,8 @@ export function Scene() {
     scene.add(anotherNebula);
 
     camera.position.z = 5;
-  });
+    setPlanets([sun, uranus, saturn, jupiter, earth, neptune, mercury, venus]);
+  }, []);
 
-  return <div>{popUp && <ChoosePlanet />}</div>;
+  return <div>{popUp && <ChoosePlanet planets={[planets, setPlanets]} />}</div>;
 }
