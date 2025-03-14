@@ -14,7 +14,7 @@ export function Scene() {
   const [popUp, setPopUp] = useState(false);
   setTimeout(() => {
     setPopUp(true);
-  }, "2000");
+  }, "3000");
 
   const [planets, setPlanets] = useState({});
 
@@ -53,8 +53,8 @@ export function Scene() {
 
     function animate(t = 0) {
       const time = t * 0.0005;
-      // requestAnimationFrame(animate);
-      // solarSystem.userData.update(time);
+      requestAnimationFrame(animate);
+      solarSystem.userData.update(time);
       renderer.render(scene, camera);
       if (useAnimatedCamera) {
         camera.position.x = Math.cos(time * 0.75) * cameraDistance;

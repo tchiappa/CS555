@@ -3,14 +3,20 @@ import "./ChoosePlanet.css";
 
 export const ChoosePlanet = ({ planets }) => {
   const [planet, setPlanet] = planets;
-  console.log(planets);
-
+  
   return (
-    <div className="popup">
-      {console.log(planet)}
-      {planet.map((p, i) => (
-        <div key={i}>{p.name}</div>
-      ))}
+    <div className="popup-overlay">
+      <div className="popup">
+        <h2 className="popup-title">Choose a Planet</h2>
+        <div className="planet-list">
+          {planet.map((p, i) => (
+            <div key={i} className="planet-item">
+              <p>{p.name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
+
