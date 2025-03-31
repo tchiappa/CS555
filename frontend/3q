@@ -5,7 +5,7 @@ export const getPlanetInfo = (planet) =>
     (planets) => planets.name.toLowerCase() === planet.toLowerCase(),
   );
 
-export const adjustDifficult = (previousLevel, secondLastAns, lastAns) => {
+export const getQuestion = (previousLevel, secondLastAns, lastAns) => {
   // Ans are boolean
   if (secondLastAns !== lastAns) return previousLevel;
   if (lastAns) {
@@ -18,9 +18,4 @@ export const adjustDifficult = (previousLevel, secondLastAns, lastAns) => {
   return previousLevel;
 };
 
-export const getQuestion = (planet, previousLevel, secondLastAns, lastAns) => {
-  const planetInfo = getPlanetInfo(planet);
-  const difficulty = adjustDifficult(previousLevel, secondLastAns, lastAns);
-
-  return planetInfo.questions[difficulty].pop();
-};
+console.log(getQuestion("medium", true, true));
