@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development node --watch-path=./src ./src/server.js",
-    "docker": "NODE_ENV=development node ./src/server.js"
+    "docker": "NODE_ENV=development node ./src/server.js",
+    "test": "vitest"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "express": "^4.21.2",
     "mongoose": "^8.11.0",
     "supertest": "^7.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.9"
   }
 }
