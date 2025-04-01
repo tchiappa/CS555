@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "three": "^0.174.0"
-  }
-}
