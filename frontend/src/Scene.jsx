@@ -18,7 +18,7 @@ export function Scene() {
   const [planets, setPlanets] = useState([]);
   const [showQuiz, setShowQuiz] = useState(false);
   const [points, setPoints] = useState(0);
-  const [fuel, setFuel] = useState(100);
+  const [fuel, setFuel] = useState(25);
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
 
   const sceneRef = useRef(null);
@@ -85,27 +85,13 @@ export function Scene() {
     ];
 
     const newPlanets = planetData.map((p) => {
-      const startAngle = Math.random() * Math.PI * 2;
-      const startInclination = (Math.random() - 0.5) * Math.PI / 4; // -45 to 45 degrees
       const planet = getPlanet({ size: p.size, distance: p.distance, img: p.img });
       planet.userData = {
         name: p.name,
         img: p.img,
-        angle: startAngle,
-        inclination: startInclination,
         update: (time) => {
-          planet.userData.angle += 0.001; // Orbital speed
-
-          // Base circular motion
-          const x = Math.cos(planet.userData.angle) * p.distance;
-          const z = Math.sin(planet.userData.angle) * p.distance;
-
-          // Apply inclination by rotating around the X-axis
-          const y = Math.sin(planet.userData.inclination) * z; // Adjust height variation
-          const adjustedZ = Math.cos(planet.userData.inclination) * z; // Adjust depth
-
-          // Set new position
-          planet.position.set(x, y, adjustedZ);
+          planet.position.x = Math.cos(time * 0.2) * p.distance;
+          planet.position.z = Math.sin(time * 0.2) * p.distance;
         },
       };
 
@@ -144,15 +130,47 @@ export function Scene() {
   return (
     <>
       <FuelStatus fuel={fuel} />
-      {popUp && <ChoosePlanet onPlanetSelect={handlePlanetSelect} />}
+  
+      {/* Show ChoosePlanet only when there's no selected planet */}
+      {popUp && !selectedPlanet && (
+        <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+      )}
+  
+      {/* Always show the planet journey/info panel if a planet is selected */}
       {selectedPlanet && <PlanetJourney selectedPlanet={selectedPlanet} />}
+  
+      {/* Show Quiz only when user starts quiz */}
       {showQuiz && selectedPlanet && (
         <QuizModal
           selectedPlanet={selectedPlanet}
-          onClose={() => setShowQuiz(false)}
+          onClose={() => {
+            setShowQuiz(false);       // Close quiz
+            setSelectedPlanet(null);  // Reset planet
+            setPopUp(true);           // Reopen selector
+          }}
           onCorrect={() => setPoints(points + 10)}
         />
       )}
+  
+      {/* Optional: Start quiz button (when not showing quiz) */}
+      {!showQuiz && selectedPlanet && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <button
+            onClick={() => setShowQuiz(true)}
+            style={{
+              padding: "12px 24px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              backgroundColor: "#1976d2",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Start Quiz
+          </button>
+        </div>
+      )}
     </>
   );
-}
+}    
