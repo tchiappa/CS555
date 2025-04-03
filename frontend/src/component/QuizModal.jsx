@@ -1,23 +1,29 @@
-// src/components/QuizModal.jsx
 import React, { useState, useEffect } from "react";
-import quizData from "../planetInfo/data.js"; // ✅ Correct path
-
+import { getQuestion, adjustDifficult } from "../utils/questions"; // make sure path is correct
 
 function QuizModal({ selectedPlanet, onClose, onCorrect }) {
+  const [difficulty, setDifficulty] = useState("easy");
+  const [secondLastAns, setSecondLastAns] = useState(null);
+  const [lastAns, setLastAns] = useState(null);
   const [question, setQuestion] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
   useEffect(() => {
-    const planetEntry = quizData.planets.find(
-      (p) => p.name.toLowerCase() === selectedPlanet.name.toLowerCase()
-    );
-
-    if (planetEntry && planetEntry.questions?.easy?.length > 0) {
-      const randomIndex = Math.floor(Math.random() * planetEntry.questions.easy.length);
-      setQuestion(planetEntry.questions.easy[randomIndex]);
+    if (selectedPlanet?.name) {
+      const q = getQuestion(
+        selectedPlanet.name,
+        difficulty,
+        secondLastAns,
+        lastAns
+      );
+      if (q) {
+        setQuestion(q);
+      } else {
+        onClose(); // No questions left
+      }
     }
-  }, [selectedPlanet]);
+  }, [selectedPlanet, difficulty, secondLastAns, lastAns]);
 
   const handleAnswer = (option) => {
     if (!question || answered) return;
@@ -26,21 +32,47 @@ function QuizModal({ selectedPlanet, onClose, onCorrect }) {
     setIsCorrect(correct);
     setAnswered(true);
 
+    setSecondLastAns(lastAns);
+    setLastAns(correct);
+
     if (correct && onCorrect) {
-      onCorrect(); // e.g., reward points
+      onCorrect();
+    }
+  };
+
+  const handleNext = () => {
+    setAnswered(false);
+    setIsCorrect(false);
+
+    const newDifficulty = adjustDifficult(difficulty, secondLastAns, lastAns);
+    setDifficulty(newDifficulty);
+
+    const nextQ = getQuestion(
+      selectedPlanet.name,
+      newDifficulty,
+      secondLastAns,
+      lastAns
+    );
+
+    if (nextQ) {
+      setQuestion(nextQ);
+    } else {
+      onClose();
     }
   };
 
   return (
     <div style={modalStyle}>
       <h2>Quiz: {selectedPlanet.name}</h2>
-      {question ? (
+      {!question ? (
+        <p>No questions available for this planet.</p>
+      ) : (
         <>
           <p>{question.question}</p>
-          <div>
-            {question.options.map((opt, index) => (
+          <div style={{ marginBottom: "10px" }}>
+            {question.options.map((opt, idx) => (
               <button
-                key={index}
+                key={idx}
                 onClick={() => handleAnswer(opt)}
                 disabled={answered}
                 style={{ margin: "5px" }}
@@ -49,20 +81,27 @@ function QuizModal({ selectedPlanet, onClose, onCorrect }) {
               </button>
             ))}
           </div>
+
           {answered && (
-            <div style={{ marginTop: "10px" }}>
+            <div>
               {isCorrect ? (
                 <p style={{ color: "green" }}>✅ Correct!</p>
               ) : (
-                <p style={{ color: "red" }}>❌ Incorrect. The answer is: {question.answer}</p>
+                <p style={{ color: "red" }}>
+                  ❌ Incorrect. The answer is: {question.answer}
+                </p>
               )}
-              <button onClick={onClose}>Close</button>
+              <button onClick={handleNext} style={{ marginRight: "8px" }}>
+                Next
+              </button>
             </div>
           )}
         </>
-      ) : (
-        <p>No questions available for this planet.</p>
       )}
+
+      <button onClick={onClose} style={{ marginTop: "10px" }}>
+        Go Back
+      </button>
     </div>
   );
 }
@@ -73,7 +112,6 @@ const modalStyle = {
   left: "50%",
   transform: "translate(-50%, -30%)",
   backgroundColor: "white",
-  color: "black",
   padding: "20px",
   border: "2px solid #000",
   borderRadius: "10px",
