@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getPlanetInfo } from "../utils/questions";
 
 export function PlanetJourney({ selectedPlanet }) {
   const [fade, setFade] = useState(false);
@@ -13,24 +14,20 @@ export function PlanetJourney({ selectedPlanet }) {
     return <div>Loading... 🚀</div>;
   }
 
-  const planetSummaries = {
-    Mercury: "Mercury is the smallest and closest planet to the Sun, with extreme temperatures.",
-    Venus: "Venus has a thick atmosphere that traps heat, making it the hottest planet in our solar system.",
-    Earth: "Earth is the only planet known to support life, with vast oceans and diverse ecosystems.",
-    Mars: "Mars is known as the Red Planet and has the tallest volcano and deepest canyon in the solar system.",
-    Jupiter: "Jupiter is the largest planet, famous for its Great Red Spot and strong magnetic field.",
-    Saturn: "Saturn is known for its stunning rings, which are made of ice and rock particles.",
-    Uranus: "Uranus rotates on its side and has a pale blue color due to methane in its atmosphere.",
-    Neptune: "Neptune is a cold, windy planet with the fastest recorded winds in the solar system.",
-  };
-
   const handleShowTopics = () => {
     setShowTopics(true); // Show topics after button click
     setShowSummary(false); // Hide summary
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "20px", opacity: fade ? 1 : 0, transition: "opacity 2s" }}>
+    <div
+      style={{
+        textAlign: "center",
+        padding: "20px",
+        opacity: fade ? 1 : 0,
+        transition: "opacity 2s",
+      }}
+    >
       <h2>🚀 Traveling...</h2>
       <h2>Welcome to {selectedPlanet.name}!</h2>
       <img
@@ -42,8 +39,11 @@ export function PlanetJourney({ selectedPlanet }) {
       {showSummary && (
         <div>
           <h3>🌍 Planet Summary</h3>
-          <p>{planetSummaries[selectedPlanet.name]}</p>
-          <button onClick={handleShowTopics} style={{ padding: "10px 20px", fontSize: "16px" }}>
+          <p>{getPlanetInfo(selectedPlanet.name).information}</p>
+          <button
+            onClick={handleShowTopics}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
             Show Topics
           </button>
         </div>
@@ -57,10 +57,11 @@ export function PlanetJourney({ selectedPlanet }) {
               <li key={index}>{topic}</li>
             ))}
           </ul>
-          <p>Prepare yourself for exciting questions about {selectedPlanet.name}!</p>
+          <p>
+            Prepare yourself for exciting questions about {selectedPlanet.name}!
+          </p>
         </div>
       )}
     </div>
   );
 }
-
