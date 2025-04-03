@@ -8,12 +8,24 @@ import getPlanet from "./getPlanet.js";
 import getElipticLines from "./getElipticLines.js";
 import { ChoosePlanet } from "./component/ChoosePlanet.jsx";
 import { PlanetJourney } from "./component/PlanetJourney.jsx";
+<<<<<<< HEAD
+=======
+import QuizModal from "./component/QuizModal.jsx";
+import FuelStatus from "./component/FuelStatus.jsx";
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
 
 export function Scene() {
   const [popUp, setPopUp] = useState(false);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [isTraveling, setIsTraveling] = useState(false);
   const [planets, setPlanets] = useState([]);
+<<<<<<< HEAD
+=======
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [points, setPoints] = useState(0);
+  const [fuel, setFuel] = useState(100);
+  const [currentPlanet, setCurrentPlanet] = useState("Earth");
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -45,16 +57,26 @@ export function Scene() {
     function animate(t = 0) {
       requestAnimationFrame(animate);
       const time = t * 0.0005;
+<<<<<<< HEAD
     
       // Ensure each planet has a valid update function before calling it
+=======
+
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
       solarSystem.children.forEach((child) => {
         if (child.userData && typeof child.userData.update === "function") {
           child.userData.update(time);
         }
       });
+<<<<<<< HEAD
     
       renderer.render(scene, camera);
     
+=======
+
+      renderer.render(scene, camera);
+
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
       if (useAnimatedCamera) {
         camera.position.x = Math.cos(time * 0.75) * cameraDistance;
         camera.position.y = Math.cos(time * 0.75);
@@ -64,8 +86,11 @@ export function Scene() {
         controls.update();
       }
     }
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
 
     const sun = getSun();
     solarSystem.add(sun);
@@ -83,11 +108,23 @@ export function Scene() {
 
     const newPlanets = planetData.map((p) => {
       const planet = getPlanet({ size: p.size, distance: p.distance, img: p.img });
+<<<<<<< HEAD
       planet.userData = { name: p.name, img: p.img, update: (time) => {
           planet.position.x = Math.cos(time * 0.2) * p.distance;
           planet.position.z = Math.sin(time * 0.2) * p.distance;
       }};
       
+=======
+      planet.userData = {
+        name: p.name,
+        img: p.img,
+        update: (time) => {
+          planet.position.x = Math.cos(time * 0.2) * p.distance;
+          planet.position.z = Math.sin(time * 0.2) * p.distance;
+        },
+      };
+
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
       solarSystem.add(planet);
       return planet;
     });
@@ -110,18 +147,44 @@ export function Scene() {
   const handlePlanetSelect = (planet) => {
     console.log("🌍 Planet selected in Scene:", planet);
     setIsTraveling(true);
+<<<<<<< HEAD
     setTimeout(() => {
       setIsTraveling(false);
       setSelectedPlanet(planet);
       setPopUp(false);
+=======
+
+    setTimeout(() => {
+      setIsTraveling(false);
+      setSelectedPlanet(planet);
+      setCurrentPlanet(planet.name);
+      setPopUp(false);
+      setShowQuiz(true);
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
     }, 5000);
   };
 
   return (
     <>
+<<<<<<< HEAD
       {popUp && <ChoosePlanet onPlanetSelect={handlePlanetSelect} />}
       {selectedPlanet && <PlanetJourney selectedPlanet={selectedPlanet} />}
       
     </>
   );
 }
+=======
+      <FuelStatus fuel={fuel} />
+      {popUp && <ChoosePlanet onPlanetSelect={handlePlanetSelect} />}
+      {selectedPlanet && <PlanetJourney selectedPlanet={selectedPlanet} />}
+      {showQuiz && selectedPlanet && (
+        <QuizModal
+          selectedPlanet={selectedPlanet}
+          onClose={() => setShowQuiz(false)}
+          onCorrect={() => setPoints(points + 10)}
+        />
+      )}
+    </>
+  );
+}
+>>>>>>> c7ac8e3 (🚀 Uploaded full local project with latest changes)
