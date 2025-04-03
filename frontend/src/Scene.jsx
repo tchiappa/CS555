@@ -8,12 +8,18 @@ import getPlanet from "./getPlanet.js";
 import getElipticLines from "./getElipticLines.js";
 import { ChoosePlanet } from "./component/ChoosePlanet.jsx";
 import { PlanetJourney } from "./component/PlanetJourney.jsx";
+import QuizModal from "./component/QuizModal.jsx";
+import FuelStatus from "./component/FuelStatus.jsx";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(false);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [isTraveling, setIsTraveling] = useState(false);
   const [planets, setPlanets] = useState([]);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [points, setPoints] = useState(0);
+  const [fuel, setFuel] = useState(100);
+  const [currentPlanet, setCurrentPlanet] = useState("Earth");
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -45,16 +51,15 @@ export function Scene() {
     function animate(t = 0) {
       requestAnimationFrame(animate);
       const time = t * 0.0005;
-    
-      // Ensure each planet has a valid update function before calling it
+
       solarSystem.children.forEach((child) => {
         if (child.userData && typeof child.userData.update === "function") {
           child.userData.update(time);
         }
       });
-    
+
       renderer.render(scene, camera);
-    
+
       if (useAnimatedCamera) {
         camera.position.x = Math.cos(time * 0.75) * cameraDistance;
         camera.position.y = Math.cos(time * 0.75);
@@ -64,8 +69,6 @@ export function Scene() {
         controls.update();
       }
     }
-    
-
 
     const sun = getSun();
     solarSystem.add(sun);
@@ -83,11 +86,15 @@ export function Scene() {
 
     const newPlanets = planetData.map((p) => {
       const planet = getPlanet({ size: p.size, distance: p.distance, img: p.img });
-      planet.userData = { name: p.name, img: p.img, update: (time) => {
+      planet.userData = {
+        name: p.name,
+        img: p.img,
+        update: (time) => {
           planet.position.x = Math.cos(time * 0.2) * p.distance;
           planet.position.z = Math.sin(time * 0.2) * p.distance;
-      }};
-      
+        },
+      };
+
       solarSystem.add(planet);
       return planet;
     });
@@ -110,18 +117,28 @@ export function Scene() {
   const handlePlanetSelect = (planet) => {
     console.log("🌍 Planet selected in Scene:", planet);
     setIsTraveling(true);
+
     setTimeout(() => {
       setIsTraveling(false);
       setSelectedPlanet(planet);
+      setCurrentPlanet(planet.name);
       setPopUp(false);
+      setShowQuiz(true);
     }, 5000);
   };
 
   return (
     <>
+      <FuelStatus fuel={fuel} />
       {popUp && <ChoosePlanet onPlanetSelect={handlePlanetSelect} />}
       {selectedPlanet && <PlanetJourney selectedPlanet={selectedPlanet} />}
-      
+      {showQuiz && selectedPlanet && (
+        <QuizModal
+          selectedPlanet={selectedPlanet}
+          onClose={() => setShowQuiz(false)}
+          onCorrect={() => setPoints(points + 10)}
+        />
+      )}
     </>
   );
 }
