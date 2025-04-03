@@ -15,9 +15,9 @@ function getPlanet({ children = [], distance = 0, img = "", size = 1 }) {
   const planet = new THREE.Mesh(geo, planetMat);
   planet.scale.setScalar(size);
 
-  const startAngle = Math.random() * Math.PI * 2;
-  planet.position.x = Math.cos(startAngle) * distance;
-  planet.position.z = Math.sin(startAngle) * distance;
+  //const startAngle = Math.random() * Math.PI * 2;
+  // planet.position.x = Math.cos(angle) * distance;
+  // planet.position.z = Math.sin(angle) * distance;
 
   const planetRimMat = getFresnelMat({ rimHex: 0xffffff, facingHex: 0x000000 });
   const planetRimMesh = new THREE.Mesh(geo, planetRimMat);
@@ -25,8 +25,8 @@ function getPlanet({ children = [], distance = 0, img = "", size = 1 }) {
   planet.add(planetRimMesh);
 
   children.forEach((child) => {
-    child.position.x = Math.cos(startAngle) * distance;
-    child.position.z = Math.sin(startAngle) * distance;
+    // child.position.x = Math.cos(angle) * distance;
+    // child.position.z = Math.sin(angle) * distance;
     orbitGroup.add(child);
   });
 

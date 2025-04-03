@@ -85,13 +85,27 @@ export function Scene() {
     ];
 
     const newPlanets = planetData.map((p) => {
+      const startAngle = Math.random() * Math.PI * 2;
+      const startInclination = (Math.random() - 0.5) * Math.PI / 4; // -45 to 45 degrees
       const planet = getPlanet({ size: p.size, distance: p.distance, img: p.img });
       planet.userData = {
         name: p.name,
         img: p.img,
+        angle: startAngle,
+        inclination: startInclination,
         update: (time) => {
-          planet.position.x = Math.cos(time * 0.2) * p.distance;
-          planet.position.z = Math.sin(time * 0.2) * p.distance;
+          planet.userData.angle += 0.001; // Orbital speed
+
+          // Base circular motion
+          const x = Math.cos(planet.userData.angle) * p.distance;
+          const z = Math.sin(planet.userData.angle) * p.distance;
+
+          // Apply inclination by rotating around the X-axis
+          const y = Math.sin(planet.userData.inclination) * z; // Adjust height variation
+          const adjustedZ = Math.cos(planet.userData.inclination) * z; // Adjust depth
+
+          // Set new position
+          planet.position.set(x, y, adjustedZ);
         },
       };
 
