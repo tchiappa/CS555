@@ -33,7 +33,7 @@ export function Scene() {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate);
+    //renderer.setAnimationLoop(animate);
     document.body.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -74,14 +74,14 @@ export function Scene() {
     solarSystem.add(sun);
 
     const planetData = [
-      { size: 0.1, distance: 1.25, img: "mercury.png", name: "Mercury", speed: 0.002 },
-      { size: 0.2, distance: 1.65, img: "venus.png", name: "Venus", speed: 0.0015 },
-      { size: 0.225, distance: 2.0, img: "earth.png", name: "Earth", speed: 0.001 },
-      { size: 0.15, distance: 2.25, img: "mars.png", name: "Mars", speed: 0.0008 },
-      { size: 0.4, distance: 2.75, img: "jupiter.png", name: "Jupiter", speed: 0.0005 },
-      { size: 0.35, distance: 3.25, img: "saturn.png", name: "Saturn", speed: 0.0004 },
-      { size: 0.3, distance: 3.75, img: "uranus.png", name: "Uranus", speed: 0.0003 },
-      { size: 0.3, distance: 4.25, img: "neptune.png", name: "Neptune", speed: 0.0002 },
+      { size: 0.1, distance: 1.25, img: "mercury.png", name: "Mercury", speed: 0.02 },
+      { size: 0.2, distance: 1.65, img: "venus.png", name: "Venus", speed: 0.015 },
+      { size: 0.225, distance: 2.0, img: "earth.png", name: "Earth", speed: 0.01 },
+      { size: 0.15, distance: 2.25, img: "mars.png", name: "Mars", speed: 0.008 },
+      { size: 0.4, distance: 2.75, img: "jupiter.png", name: "Jupiter", speed: 0.005 },
+      { size: 0.35, distance: 3.25, img: "saturn.png", name: "Saturn", speed: 0.004 },
+      { size: 0.3, distance: 3.75, img: "uranus.png", name: "Uranus", speed: 0.003 },
+      { size: 0.3, distance: 4.25, img: "neptune.png", name: "Neptune", speed: 0.002 },
     ];
 
     const newPlanets = planetData.map((p) => {
@@ -123,6 +123,8 @@ export function Scene() {
     scene.add(getNebula({ hue: 0.0, numSprites: 10, opacity: 0.2, radius: 50, size: 100, z: 50.5 }));
 
     camera.position.z = 5;
+
+    animate();
 
     return () => {
       document.body.removeChild(renderer.domElement);
