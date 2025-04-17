@@ -12,12 +12,11 @@ import QuizModal from "./component/QuizModal.jsx";
 import FuelStatus from "./component/FuelStatus.jsx";
 
 export function Scene() {
-  const [popUp, setPopUp] = useState(false);
+  const [popUp, setPopUp] = useState(true);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [isTraveling, setIsTraveling] = useState(false);
   const [planets, setPlanets] = useState([]);
   const [showQuiz, setShowQuiz] = useState(false);
-  const [points, setPoints] = useState(0);
   const [fuel, setFuel] = useState(25);
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
 
@@ -25,12 +24,15 @@ export function Scene() {
   const rendererRef = useRef(null);
 
   useEffect(() => {
-    setTimeout(() => setPopUp(true), 3000);
-
     let useAnimatedCamera = true;
     const cameraDistance = 5;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000,
+    );
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setAnimationLoop(animate);
@@ -49,45 +51,97 @@ export function Scene() {
     setTimeout(() => (useAnimatedCamera = false), 2000);
 
     function animate(t = 0) {
-      requestAnimationFrame(animate);
-      const time = t * 0.0005;
-
-      solarSystem.children.forEach((child) => {
-        if (child.userData && typeof child.userData.update === "function") {
-          child.userData.update(time);
-        }
-      });
-
-      renderer.render(scene, camera);
-
-      if (useAnimatedCamera) {
-        camera.position.x = Math.cos(time * 0.75) * cameraDistance;
-        camera.position.y = Math.cos(time * 0.75);
-        camera.position.z = Math.sin(time * 0.75) * cameraDistance;
-        camera.lookAt(0, 0, 0);
-      } else {
-        controls.update();
-      }
+      // requestAnimationFrame(animate);
+      // const time = t * 0.0005;
+      //
+      // solarSystem.children.forEach((child) => {
+      //   if (child.userData && typeof child.userData.update === "function") {
+      //     child.userData.update(time);
+      //   }
+      // });
+      //
+      // // renderer.render(scene, camera);
+      //
+      // if (useAnimatedCamera) {
+      //   camera.position.x = Math.cos(time * 0.75) * cameraDistance;
+      //   camera.position.y = Math.cos(time * 0.75);
+      //   camera.position.z = Math.sin(time * 0.75) * cameraDistance;
+      //   camera.lookAt(0, 0, 0);
+      // } else {
+      //   controls.update();
+      // }
     }
 
     const sun = getSun();
     solarSystem.add(sun);
 
     const planetData = [
-      { size: 0.1, distance: 1.25, img: "mercury.png", name: "Mercury", speed: 0.002 },
-      { size: 0.2, distance: 1.65, img: "venus.png", name: "Venus", speed: 0.0015 },
-      { size: 0.225, distance: 2.0, img: "earth.png", name: "Earth", speed: 0.001 },
-      { size: 0.15, distance: 2.25, img: "mars.png", name: "Mars", speed: 0.0008 },
-      { size: 0.4, distance: 2.75, img: "jupiter.png", name: "Jupiter", speed: 0.0005 },
-      { size: 0.35, distance: 3.25, img: "saturn.png", name: "Saturn", speed: 0.0004 },
-      { size: 0.3, distance: 3.75, img: "uranus.png", name: "Uranus", speed: 0.0003 },
-      { size: 0.3, distance: 4.25, img: "neptune.png", name: "Neptune", speed: 0.0002 },
+      {
+        size: 0.1,
+        distance: 1.25,
+        img: "mercury.png",
+        name: "Mercury",
+        speed: 0.002,
+      },
+      {
+        size: 0.2,
+        distance: 1.65,
+        img: "venus.png",
+        name: "Venus",
+        speed: 0.0015,
+      },
+      {
+        size: 0.225,
+        distance: 2.0,
+        img: "earth.png",
+        name: "Earth",
+        speed: 0.001,
+      },
+      {
+        size: 0.15,
+        distance: 2.25,
+        img: "mars.png",
+        name: "Mars",
+        speed: 0.0008,
+      },
+      {
+        size: 0.4,
+        distance: 2.75,
+        img: "jupiter.png",
+        name: "Jupiter",
+        speed: 0.0005,
+      },
+      {
+        size: 0.35,
+        distance: 3.25,
+        img: "saturn.png",
+        name: "Saturn",
+        speed: 0.0004,
+      },
+      {
+        size: 0.3,
+        distance: 3.75,
+        img: "uranus.png",
+        name: "Uranus",
+        speed: 0.0003,
+      },
+      {
+        size: 0.3,
+        distance: 4.25,
+        img: "neptune.png",
+        name: "Neptune",
+        speed: 0.0002,
+      },
     ];
 
     const newPlanets = planetData.map((p) => {
       const startAngle = Math.random() * Math.PI * 2;
-      const startInclination = (Math.random() - 0.5) * Math.PI / 4; // -45 to 45 degrees
-      const planet = getPlanet({ size: p.size, distance: p.distance, img: p.img });
+      const startInclination = ((Math.random() - 0.5) * Math.PI) / 4; // -45 to 45 degrees
+      const planet = getPlanet({
+        size: p.size,
+        distance: p.distance,
+        img: p.img,
+      });
       planet.userData = {
         name: p.name,
         img: p.img,
@@ -119,8 +173,26 @@ export function Scene() {
     solarSystem.add(getElipticLines());
     scene.add(getStarfield({ numStars: 1000, size: 0.5 }));
     scene.add(new THREE.HemisphereLight(0xffffff, 0x444444));
-    scene.add(getNebula({ hue: 0.6, numSprites: 10, opacity: 0.2, radius: 50, size: 100, z: -50.5 }));
-    scene.add(getNebula({ hue: 0.0, numSprites: 10, opacity: 0.2, radius: 50, size: 100, z: 50.5 }));
+    scene.add(
+      getNebula({
+        hue: 0.6,
+        numSprites: 10,
+        opacity: 0.2,
+        radius: 50,
+        size: 100,
+        z: -50.5,
+      }),
+    );
+    scene.add(
+      getNebula({
+        hue: 0.0,
+        numSprites: 10,
+        opacity: 0.2,
+        radius: 50,
+        size: 100,
+        z: 50.5,
+      }),
+    );
 
     camera.position.z = 5;
 
@@ -133,40 +205,32 @@ export function Scene() {
     console.log("🌍 Planet selected in Scene:", planet);
     setIsTraveling(true);
 
-    setTimeout(() => {
-      setIsTraveling(false);
-      setSelectedPlanet(planet);
-      setCurrentPlanet(planet.name);
-      setPopUp(false);
-      setShowQuiz(true);
-    }, 5000);
+    setSelectedPlanet(planet);
+    setCurrentPlanet(planet.name);
+    setPopUp(false);
+    setShowQuiz(true);
   };
 
   return (
     <>
       <FuelStatus fuel={fuel} />
-  
+
       {/* Show ChoosePlanet only when there's no selected planet */}
       {popUp && !selectedPlanet && (
         <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
       )}
-  
+
       {/* Always show the planet journey/info panel if a planet is selected */}
-      {selectedPlanet && <PlanetJourney selectedPlanet={selectedPlanet} />}
-  
-      {/* Show Quiz only when user starts quiz */}
-      {showQuiz && selectedPlanet && (
-        <QuizModal
+      {selectedPlanet && (
+        <PlanetJourney
           selectedPlanet={selectedPlanet}
-          onClose={() => {
-            setShowQuiz(false);       // Close quiz
-            setSelectedPlanet(null);  // Reset planet
-            setPopUp(true);           // Reopen selector
+          onExit={() => {
+            setSelectedPlanet(null);
+            setPopUp(true);
           }}
-          onCorrect={() => setPoints(points + 10)}
         />
       )}
-  
+
       {/* Optional: Start quiz button (when not showing quiz) */}
       {!showQuiz && selectedPlanet && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
@@ -188,4 +252,4 @@ export function Scene() {
       )}
     </>
   );
-}    
+}

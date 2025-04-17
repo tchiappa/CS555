@@ -1,15 +1,47 @@
 import React, { useState } from "react";
 
 // You can move this to a shared data file if you want reuse
-const planets = [
-  { name: "Mercury", image: "./giphy.gif", topics: ["Space Missions", "Extreme Temperatures"] },
-  { name: "Venus", image: "./vgiphy.gif", topics: ["Greenhouse Effect", "Volcanic Activity"] },
-  { name: "Earth", image: "./egiphy.gif", topics: ["Climate Change", "Biodiversity"] },
-  { name: "Mars", image: "./mgiphy.gif", topics: ["Rovers", "Future Colonization"] },
-  { name: "Jupiter", image: "./jgiphy.gif", topics: ["Gas Giants", "Great Red Spot"] },
-  { name: "Saturn", image: "./sgiphy.gif", topics: ["Rings", "Moons like Titan"] },
-  { name: "Uranus", image: "./ugiphy.gif", topics: ["Ice Giants", "Tilted Axis"] },
-  { name: "Neptune", image: "./ngiphy.gif", topics: ["Storms", "Farthest Planet"] },
+let planets = [
+  {
+    name: "Mercury",
+    image: "./giphy.gif",
+    topics: ["Space Missions", "Extreme Temperatures"],
+  },
+  {
+    name: "Venus",
+    image: "./vgiphy.gif",
+    topics: ["Greenhouse Effect", "Volcanic Activity"],
+  },
+  {
+    name: "Earth",
+    image: "./egiphy.gif",
+    topics: ["Climate Change", "Biodiversity"],
+  },
+  {
+    name: "Mars",
+    image: "./mgiphy.gif",
+    topics: ["Rovers", "Future Colonization"],
+  },
+  {
+    name: "Jupiter",
+    image: "./jgiphy.gif",
+    topics: ["Gas Giants", "Great Red Spot"],
+  },
+  {
+    name: "Saturn",
+    image: "./sgiphy.gif",
+    topics: ["Rings", "Moons like Titan"],
+  },
+  {
+    name: "Uranus",
+    image: "./ugiphy.gif",
+    topics: ["Ice Giants", "Tilted Axis"],
+  },
+  {
+    name: "Neptune",
+    image: "./ngiphy.gif",
+    topics: ["Storms", "Farthest Planet"],
+  },
 ];
 
 export function ChoosePlanet({ onPlanetSelect }) {
@@ -20,27 +52,40 @@ export function ChoosePlanet({ onPlanetSelect }) {
     if (!planetName) return;
 
     const found = planets.find((p) => p.name === planetName);
+    planets = planets.filter((p) => p != found);
     if (found) {
       setSelectedPlanet(found); // for preview
-      onPlanetSelect(found);    // for triggering game logic
+      onPlanetSelect(found); // for triggering game logic
     }
   };
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      <h2 style={{ marginBottom: "15px" }}>Select a Planet:</h2>
+      {planets.length > 0 && (
+        <>
+          <h2 style={{ marginBottom: "15px" }}>Select a Planet:</h2>
 
-      <select onChange={handleSelection} style={{ padding: "10px", fontSize: "16px" }}>
-        <option value="">-- Choose a planet --</option>
-        {planets.map((planet) => (
-          <option key={planet.name} value={planet.name}>
-            {planet.name}
-          </option>
-        ))}
-      </select>
+          <select
+            onChange={handleSelection}
+            style={{ padding: "10px", fontSize: "16px" }}
+          >
+            <option value="">-- Choose a planet --</option>
+            {planets.map((planet) => (
+              <option key={planet.name} value={planet.name}>
+                {planet.name}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
+      {planets.length == 0 && (
+        <>
+          <h2>game over</h2>
+        </>
+      )}
 
       {/* Optional Preview */}
-      {selectedPlanet && (
+      {selectedPlanet && planets.length > 0 && (
         <div style={{ marginTop: "20px" }}>
           <img
             src={selectedPlanet.image}
@@ -59,4 +104,3 @@ export function ChoosePlanet({ onPlanetSelect }) {
     </div>
   );
 }
-

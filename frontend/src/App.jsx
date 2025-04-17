@@ -4,6 +4,8 @@ import StartingPage from "./StartingPage";
 import { PlanetJourney } from "./component/PlanetJourney";
 import { ChoosePlanet } from "./component/ChoosePlanet";
 import { Scene } from "./Scene"; // ✅ Correct path
+import { TradeProvider } from "./context/tradeContext";
+import { TradingSystem } from "./TradingSystem";
 
 function App() {
   const [showJourney, setShowJourney] = useState(false);
@@ -13,22 +15,25 @@ function App() {
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
 
   return (
-    <div>
-      {!showJourney ? (
-        <StartingPage onStart={() => setShowJourney(true)} />
-      ) : (
-        <>
-          <Scene
-            fuel={fuel}
-            setFuel={setFuel}
-            points={points}
-            setPoints={setPoints}
-            currentPlanet={currentPlanet}
-            setCurrentPlanet={setCurrentPlanet}
-          />
-        </>
-      )}
-    </div>
+    <TradeProvider>
+      <div>
+        {!showJourney ? (
+          <StartingPage onStart={() => setShowJourney(true)} />
+        ) : (
+          <>
+            <Scene
+              fuel={fuel}
+              setFuel={setFuel}
+              points={points}
+              setPoints={setPoints}
+              currentPlanet={currentPlanet}
+              setCurrentPlanet={setCurrentPlanet}
+            />
+          </>
+        )}
+        <TradingSystem />
+      </div>
+    </TradeProvider>
   );
 }
 
