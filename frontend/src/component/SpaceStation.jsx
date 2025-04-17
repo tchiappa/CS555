@@ -1,6 +1,6 @@
 import "./SpaceStation.css";
 import {useState} from "react";
-import {planetaryResources} from "../planetInfo/planetaryResources";
+import {planetaryResources} from "../planetInfo/planetaryResources.js";
 import {TradeTerminal} from "./TradeTerminal.jsx";
 import {TradeInventory} from "./TradeInventory.jsx";
 
