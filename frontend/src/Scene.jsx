@@ -10,6 +10,7 @@ import { ChoosePlanet } from "./component/ChoosePlanet.jsx";
 import { PlanetJourney } from "./component/PlanetJourney.jsx";
 import QuizModal from "./component/QuizModal.jsx";
 import FuelStatus from "./component/FuelStatus.jsx";
+import SpaceStation from "./component/SpaceStation.jsx";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(true);
@@ -19,6 +20,14 @@ export function Scene() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [fuel, setFuel] = useState(25);
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
+
+  // SpaceStation TEST DATA
+  // TODO: Adapt SpaceStation to use "real" player resource format and plantaryResources, whatever those might be.
+  const [playerResources, setPlayerResources] = useState({
+    "Red Dust": 5,
+    "Iron Ore": 2,
+    "Water Ice": 1,
+  });
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -35,7 +44,7 @@ export function Scene() {
     );
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate);
+    //renderer.setAnimationLoop(animate);
     document.body.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -81,56 +90,56 @@ export function Scene() {
         distance: 1.25,
         img: "mercury.png",
         name: "Mercury",
-        speed: 0.002,
+        speed: 0.02,
       },
       {
         size: 0.2,
         distance: 1.65,
         img: "venus.png",
         name: "Venus",
-        speed: 0.0015,
+        speed: 0.015,
       },
       {
         size: 0.225,
         distance: 2.0,
         img: "earth.png",
         name: "Earth",
-        speed: 0.001,
+        speed: 0.01,
       },
       {
         size: 0.15,
         distance: 2.25,
         img: "mars.png",
         name: "Mars",
-        speed: 0.0008,
+        speed: 0.008,
       },
       {
         size: 0.4,
         distance: 2.75,
         img: "jupiter.png",
         name: "Jupiter",
-        speed: 0.0005,
+        speed: 0.005,
       },
       {
         size: 0.35,
         distance: 3.25,
         img: "saturn.png",
         name: "Saturn",
-        speed: 0.0004,
+        speed: 0.004,
       },
       {
         size: 0.3,
         distance: 3.75,
         img: "uranus.png",
         name: "Uranus",
-        speed: 0.0003,
+        speed: 0.003,
       },
       {
         size: 0.3,
         distance: 4.25,
         img: "neptune.png",
         name: "Neptune",
-        speed: 0.0002,
+        speed: 0.002,
       },
     ];
 
@@ -196,6 +205,8 @@ export function Scene() {
 
     camera.position.z = 5;
 
+    animate();
+
     return () => {
       document.body.removeChild(renderer.domElement);
     };
@@ -214,6 +225,16 @@ export function Scene() {
   return (
     <>
       <FuelStatus fuel={fuel} />
+
+      {selectedPlanet && (
+        <SpaceStation
+          selectedPlanet={selectedPlanet}
+          fuel={fuel}
+          setFuel={setFuel}
+          playerResources={playerResources}
+          setPlayerResources={setPlayerResources}
+        />
+      )}
 
       {/* Show ChoosePlanet only when there's no selected planet */}
       {popUp && !selectedPlanet && (
