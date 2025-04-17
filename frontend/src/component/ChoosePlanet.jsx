@@ -99,12 +99,6 @@ export function ChoosePlanet({ onPlanetSelect }) {
             width="150"
             style={{ borderRadius: "8px", marginBottom: "10px" }}
           />
-          <h3>Topics:</h3>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {selectedPlanet.topics.map((topic, idx) => (
-              <li key={idx}>🚀 {topic}</li>
-            ))}
-          </ul>
         </div>
       )}
     </div>
