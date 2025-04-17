@@ -11,6 +11,8 @@ import { PlanetJourney } from "./component/PlanetJourney.jsx";
 import QuizModal from "./component/QuizModal.jsx";
 import FuelStatus from "./component/FuelStatus.jsx";
 import SpaceStation from "./component/SpaceStation.jsx";
+import { useHazard } from "./hooks/useHazard.js";
+import { Hazard } from "./component/Hazard.jsx";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(true);
@@ -28,6 +30,42 @@ export function Scene() {
     "Iron Ore": 2,
     "Water Ice": 1,
   });
+
+  // HAZARDS
+  const { currentHazard, maybeTriggerHazard, resolveHazard, clearHazard } =
+    useHazard();
+  const updateStats = ({ fuel: fuelChange, resources: resChange }) => {
+    // Update fuel
+    setFuel((f) => Math.max(0, f + fuelChange));
+
+    // Update resources with clamping to zero
+    setPlayerResources((prevResources) => {
+      const updatedResources = { ...prevResources };
+
+      for (const [key, change] of Object.entries(resChange)) {
+        const current = updatedResources[key] || 0;
+        const newValue = current + change;
+
+        // Prevent values from dropping below 0
+        updatedResources[key] = Math.max(0, newValue);
+      }
+
+      return updatedResources;
+    });
+  };
+
+  const [pendingPlanet, setPendingPlanet] = useState(null);
+  useEffect(() => {
+    if (currentHazard && currentHazard.resolved && pendingPlanet) {
+      const timeout = setTimeout(() => {
+        travelToPlanet(pendingPlanet);
+        setPendingPlanet(null);
+        clearHazard();
+      }, 2000); // or however long you want the result to show
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentHazard, pendingPlanet]);
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -214,6 +252,19 @@ export function Scene() {
 
   const handlePlanetSelect = (planet) => {
     console.log("🌍 Planet selected in Scene:", planet);
+
+    const hazard = maybeTriggerHazard();
+
+    if (hazard) {
+      // Store selected planet for later, wait for hazard resolution
+      setPendingPlanet(planet);
+    } else {
+      // No hazard, travel immediately
+      travelToPlanet(planet);
+    }
+  };
+
+  const travelToPlanet = (planet) => {
     setIsTraveling(true);
 
     setSelectedPlanet(planet);
@@ -235,6 +286,12 @@ export function Scene() {
           setPlayerResources={setPlayerResources}
         />
       )}
+
+      <Hazard
+        hazard={currentHazard}
+        onChooseOption={(opt) => resolveHazard(opt, updateStats)}
+        onClose={clearHazard}
+      />
 
       {/* Show ChoosePlanet only when there's no selected planet */}
       {popUp && !selectedPlanet && (
