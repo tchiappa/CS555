@@ -5,7 +5,7 @@ import SpaceStation from '../../src/component/SpaceStation.jsx';
 import {TradeTerminal} from "../../src/component/TradeTerminal.jsx";
 import {TradeResource} from "../../src/component/TradeResource.jsx";
 
-vi.mock('../../src/planetInfo/PlanetaryResources', () => ({
+vi.mock('../../src/planetInfo/planetaryResources', () => ({
     planetaryResources: {
         Earth: [
             { name: 'Water Ice', value: 1 }
