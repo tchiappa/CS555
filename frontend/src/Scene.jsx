@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {useEffect, useState, useRef, useContext} from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import getSun from "./getSun.js";
@@ -13,6 +13,7 @@ import FuelStatus from "./component/FuelStatus.jsx";
 import SpaceStation from "./component/SpaceStation.jsx";
 import { useHazard } from "./hooks/useHazard.js";
 import { Hazard } from "./component/Hazard.jsx";
+import TradeContext from "./context/tradeContext.jsx";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(true);
@@ -20,16 +21,10 @@ export function Scene() {
   const [isTraveling, setIsTraveling] = useState(false);
   const [planets, setPlanets] = useState([]);
   const [showQuiz, setShowQuiz] = useState(false);
-  const [fuel, setFuel] = useState(25);
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
 
-  // SpaceStation TEST DATA
-  // TODO: Adapt SpaceStation to use "real" player resource format and plantaryResources, whatever those might be.
-  const [playerResources, setPlayerResources] = useState({
-    "Red Dust": 5,
-    "Iron Ore": 2,
-    "Water Ice": 1,
-  });
+  const {playerResources, setPlayerResources, fuel, setFuel} =
+      useContext(TradeContext);
 
   // HAZARDS
   const { currentHazard, maybeTriggerHazard, resolveHazard, clearHazard } =
