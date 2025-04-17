@@ -1,51 +1,53 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import TradeContext from "../context/tradeContext";
 
 // You can move this to a shared data file if you want reuse
 let planets = [
   {
     name: "Mercury",
     image: "./giphy.gif",
-    topics: ["Space Missions", "Extreme Temperatures"],
+    fuelCoast: 2,
   },
   {
     name: "Venus",
     image: "./vgiphy.gif",
-    topics: ["Greenhouse Effect", "Volcanic Activity"],
+    fuelCoast: 4,
   },
   {
     name: "Earth",
     image: "./egiphy.gif",
-    topics: ["Climate Change", "Biodiversity"],
+    fuelCoast: 6,
   },
   {
     name: "Mars",
     image: "./mgiphy.gif",
-    topics: ["Rovers", "Future Colonization"],
+    fuelCoast: 8,
   },
   {
     name: "Jupiter",
     image: "./jgiphy.gif",
-    topics: ["Gas Giants", "Great Red Spot"],
+    fuelCoast: 10,
   },
   {
     name: "Saturn",
     image: "./sgiphy.gif",
-    topics: ["Rings", "Moons like Titan"],
+    fuelCoast: 12,
   },
   {
     name: "Uranus",
     image: "./ugiphy.gif",
-    topics: ["Ice Giants", "Tilted Axis"],
+    fuelCoast: 14,
   },
   {
     name: "Neptune",
     image: "./ngiphy.gif",
-    topics: ["Storms", "Farthest Planet"],
+    fuelCoast: 16,
   },
 ];
 
 export function ChoosePlanet({ onPlanetSelect }) {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
+  const { fuel } = useContext(TradeContext);
 
   const handleSelection = (e) => {
     const planetName = e.target.value;
@@ -70,11 +72,15 @@ export function ChoosePlanet({ onPlanetSelect }) {
             style={{ padding: "10px", fontSize: "16px" }}
           >
             <option value="">-- Choose a planet --</option>
-            {planets.map((planet) => (
-              <option key={planet.name} value={planet.name}>
-                {planet.name}
-              </option>
-            ))}
+            {planets.map(
+              (planet) =>
+                fuel > planet.fuelCoast && (
+                  <option key={planet.name} value={planet.name}>
+                    <strong>{planet.name} </strong>
+                    Required Fuel <strong>{planet.fuelCoast}</strong>
+                  </option>
+                ),
+            )}
           </select>
         </>
       )}

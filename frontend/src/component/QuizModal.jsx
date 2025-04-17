@@ -6,7 +6,14 @@ function QuizModal({ selectedPlanet, onClose }) {
   const [lastAns, setLastAns] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const { setResource, difficulty, getQuestion } = useContext(TradeContext);
+  const {
+    setPlayerResources,
+    planetaryResources,
+    setPoints,
+    difficulty,
+    getQuestion,
+    playerResources,
+  } = useContext(TradeContext);
 
   const [question, setQuestion] = useState(null);
 
@@ -29,16 +36,20 @@ function QuizModal({ selectedPlanet, onClose }) {
     const multiple = difficultyMap[difficulty] || 1;
 
     if (correct) {
-      setResource((prev) => ({
-        ...prev,
-        fuel: prev.fuel + multiple * 50,
-        oxygen: prev.oxygen + multiple * 20,
-      }));
+      setPoints((prev) => prev + multiple * 5);
+      if (difficulty === "hard") {
+        const index = Math.floor(Math.random() * 5);
+        const name =
+          planetaryResources[selectedPlanet.name][index].name.toString();
+        const value = planetaryResources[selectedPlanet.name][index].value;
+        const prevValue = playerResources[name];
+        setPlayerResources((prev) => {
+          prev[name] = (prevValue || 0) + value;
+          return prev;
+        });
+      }
     } else {
-      setResource((prev) => ({
-        ...prev,
-        oxygen: prev.oxygen - 20 >= 0 ? prev.oxygen - 20 : 0,
-      }));
+      setPoints((prev) => prev - 5);
     }
   };
 

@@ -60,25 +60,25 @@ export function Scene() {
     setTimeout(() => (useAnimatedCamera = false), 2000);
 
     function animate(t = 0) {
-      // requestAnimationFrame(animate);
-      // const time = t * 0.0005;
-      //
-      // solarSystem.children.forEach((child) => {
-      //   if (child.userData && typeof child.userData.update === "function") {
-      //     child.userData.update(time);
-      //   }
-      // });
-      //
-      // // renderer.render(scene, camera);
-      //
-      // if (useAnimatedCamera) {
-      //   camera.position.x = Math.cos(time * 0.75) * cameraDistance;
-      //   camera.position.y = Math.cos(time * 0.75);
-      //   camera.position.z = Math.sin(time * 0.75) * cameraDistance;
-      //   camera.lookAt(0, 0, 0);
-      // } else {
-      //   controls.update();
-      // }
+      requestAnimationFrame(animate);
+      const time = t * 0.0005;
+
+      solarSystem.children.forEach((child) => {
+        if (child.userData && typeof child.userData.update === "function") {
+          child.userData.update(time);
+        }
+      });
+
+      renderer.render(scene, camera);
+
+      if (useAnimatedCamera) {
+        camera.position.x = Math.cos(time * 0.75) * cameraDistance;
+        camera.position.y = Math.cos(time * 0.75);
+        camera.position.z = Math.sin(time * 0.75) * cameraDistance;
+        camera.lookAt(0, 0, 0);
+      } else {
+        controls.update();
+      }
     }
 
     const sun = getSun();

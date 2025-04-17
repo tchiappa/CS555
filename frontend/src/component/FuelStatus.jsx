@@ -1,13 +1,17 @@
 // src/components/FuelStatus.jsx
-import React from "react";
+import React, { useContext } from "react";
+import TradeContext from "../context/tradeContext";
 
-function FuelStatus({ fuel, gained }) {
+function FuelStatus() {
+  const { fuel, points } = useContext(TradeContext);
   return (
     <div style={statusStyle}>
-      <p>🚀 Current Fuel: <strong>{fuel}</strong></p>
-      {gained !== null && (
-        <p style={{ color: "green" }}>+{gained} fuel collected from this planet</p>
-      )}
+      <p>
+        🚀 Current Fuel: <strong>{fuel}</strong>
+      </p>
+      <p>
+        Points Earned: <strong>{points}</strong>
+      </p>
     </div>
   );
 }

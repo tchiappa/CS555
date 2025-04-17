@@ -1,33 +1,46 @@
-export function TradeResource({resource, fuel, setFuel, playerResources, setPlayerResources}) {
+import { useContext } from "react";
+import TradeContext from "../context/tradeContext";
 
-    function onTrade(e) {
-        e.stopPropagation();
+export function TradeResource({ resource }) {
+  const { playerResources, setPlayerResources, fuel, setFuel } =
+    useContext(TradeContext);
 
-        const currentAmount = playerResources[resource.name] || 0;
+  function onTrade(e) {
+    e.stopPropagation();
 
-        if (currentAmount <= 0) return;
+    const currentAmount = playerResources[resource.name] || 0;
 
-        const updatedPlayerResources = {
-            ...playerResources,
-            [resource.name]: currentAmount - 1
-        };
+    if (currentAmount <= 0) return;
 
-        // Clean up if count drops to 0
-        if (updatedPlayerResources[resource.name] === 0) {
-            delete updatedPlayerResources[resource.name];
-        }
+    const updatedPlayerResources = {
+      ...playerResources,
+      [resource.name]: currentAmount - 1,
+    };
 
-        setPlayerResources(updatedPlayerResources);
-        setFuel(fuel + resource.value);
+    // Clean up if count drops to 0
+    if (updatedPlayerResources[resource.name] === 0) {
+      delete updatedPlayerResources[resource.name];
     }
 
-    return (
-        <li className="resource" style={{ opacity: resource.available ? 1 : 0.5 }}>
-            <div className="resource-name" data-testid="trade-resource-name">{resource?.name}</div>
-            <div>
-                <span className="fuel-value">+{resource?.value} Fuel</span>
-                <button onClick={onTrade} disabled={!resource.available} data-testid="trade-terminal-trade-button">Trade</button>
-            </div>
-        </li>
-    );
+    setPlayerResources(updatedPlayerResources);
+    setFuel(fuel + resource.value);
+  }
+
+  return (
+    <li className="resource" style={{ opacity: resource.available ? 1 : 0.5 }}>
+      <div className="resource-name" data-testid="trade-resource-name">
+        {resource?.name}
+      </div>
+      <div>
+        <span className="fuel-value">+{resource?.value} Fuel</span>
+        <button
+          onClick={onTrade}
+          disabled={!resource.available}
+          data-testid="trade-terminal-trade-button"
+        >
+          Trade
+        </button>
+      </div>
+    </li>
+  );
 }
