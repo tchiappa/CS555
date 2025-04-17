@@ -10,6 +10,7 @@ import { ChoosePlanet } from "./component/ChoosePlanet.jsx";
 import { PlanetJourney } from "./component/PlanetJourney.jsx";
 import QuizModal from "./component/QuizModal.jsx";
 import FuelStatus from "./component/FuelStatus.jsx";
+import SpaceStation from "./component/SpaceStation.jsx";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(false);
@@ -20,6 +21,14 @@ export function Scene() {
   const [points, setPoints] = useState(0);
   const [fuel, setFuel] = useState(25);
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
+
+  // SpaceStation TEST DATA
+  // TODO: Adapt SpaceStation to use "real" player resource format and plantaryResources, whatever those might be.
+  const [playerResources, setPlayerResources] = useState({
+    "Red Dust": 5,
+    "Iron Ore": 2,
+    "Water Ice": 1
+  });
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -147,6 +156,12 @@ export function Scene() {
   return (
     <>
       <FuelStatus fuel={fuel} />
+
+      {selectedPlanet && <SpaceStation selectedPlanet={selectedPlanet}
+                                       fuel={fuel}
+                                       setFuel={setFuel}
+                                       playerResources={playerResources}
+                                       setPlayerResources={setPlayerResources} />}
   
       {/* Show ChoosePlanet only when there's no selected planet */}
       {popUp && !selectedPlanet && (
