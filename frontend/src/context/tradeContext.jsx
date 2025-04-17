@@ -4,6 +4,8 @@ import questions from "../planetInfo/data.js";
 const TradeContext = createContext({});
 
 export const TradeProvider = ({ children }) => {
+  const [stationVisits, setStationVisits] = useState(0);
+
   const [playerResources, setPlayerResources] = useState({
     "Red Dust": 5,
     "Iron Ore": 2,
@@ -103,6 +105,8 @@ export const TradeProvider = ({ children }) => {
   return (
     <TradeContext.Provider
       value={{
+        stationVisits,
+        setStationVisits,
         playerResources,
         setPlayerResources,
         difficulty,
