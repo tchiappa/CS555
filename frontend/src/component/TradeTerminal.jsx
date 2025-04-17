@@ -1,25 +1,44 @@
-import {TradeResource} from "./TradeResource.jsx";
+import { useContext } from "react";
+import { TradeResource } from "./TradeResource.jsx";
+import TradeContext from "../context/tradeContext.jsx";
 
-export function TradeTerminal({resources, fuel, setFuel, playerResources, setPlayerResources}) {
-    return <div>
-        <h2>Trade Terminal</h2>
-        <p>Exchange resources for fuel. Prices may vary.</p>
+export function TradeTerminal({ selectedPlanet }) {
+  const { fuel, playerResources, setPlayerResources, planetaryResources } =
+    useContext(TradeContext);
 
-        <div className="trade-panel">
-            <ul className="resource-list">
-                {resources.map((resource, index) => (
-                    <TradeResource key={index}
-                                   resource={resource}
-                                   fuel={fuel}
-                                   setFuel={setFuel}
-                                   playerResources={playerResources}
-                                   setPlayerResources={setPlayerResources} />
-                ))}
-            </ul>
+  const baseResources =
+    planetaryResources[selectedPlanet?.name] || planetaryResources["Earth"];
 
-            <div className="fuel-display">
-                <p>Current Fuel: <strong>{fuel}</strong></p>
-            </div>
+  // Enrich trade offers with availability info
+  const resources = baseResources.map((resource, index) => ({
+    name: resource.name,
+    value: resource.value,
+    available: playerResources[resource.name] || 0,
+  }));
+
+  return (
+    <div>
+      <h2>Trade Terminal</h2>
+      <p>Exchange resources for fuel. Prices may vary.</p>
+
+      <div className="trade-panel">
+        <ul className="resource-list">
+          {Object.entries(resources).map((resource, index) => (
+            <TradeResource
+              key={index}
+              resource={resource[1]}
+              playerResources={playerResources}
+              setPlayerResources={setPlayerResources}
+            />
+          ))}
+        </ul>
+
+        <div className="fuel-display">
+          <p>
+            Current Fuel: <strong>{fuel}</strong>
+          </p>
         </div>
-    </div>;
+      </div>
+    </div>
+  );
 }

@@ -1,29 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { getQuestion, adjustDifficult } from "../utils/questions"; // make sure path is correct
+import React, { useState, useEffect, useContext } from "react";
+import TradeContext from "../context/tradeContext";
 
-function QuizModal({ selectedPlanet, onClose, onCorrect }) {
-  const [difficulty, setDifficulty] = useState("easy");
+function QuizModal({ selectedPlanet, onClose }) {
   const [secondLastAns, setSecondLastAns] = useState(null);
   const [lastAns, setLastAns] = useState(null);
-  const [question, setQuestion] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const {
+    setPlayerResources,
+    planetaryResources,
+    setPoints,
+    difficulty,
+    getQuestion,
+    playerResources,
+  } = useContext(TradeContext);
 
-  useEffect(() => {
-    if (selectedPlanet?.name) {
-      const q = getQuestion(
-        selectedPlanet.name,
-        difficulty,
-        secondLastAns,
-        lastAns
-      );
-      if (q) {
-        setQuestion(q);
-      } else {
-        onClose(); // No questions left
-      }
-    }
-  }, [selectedPlanet, difficulty, secondLastAns, lastAns]);
+  const [question, setQuestion] = useState(null);
 
   const handleAnswer = (option) => {
     if (!question || answered) return;
@@ -35,8 +27,29 @@ function QuizModal({ selectedPlanet, onClose, onCorrect }) {
     setSecondLastAns(lastAns);
     setLastAns(correct);
 
-    if (correct && onCorrect) {
-      onCorrect();
+    // readable code which has the correct logic
+    const difficultyMap = {
+      easy: 1,
+      medium: 2,
+      hard: 3,
+    };
+    const multiple = difficultyMap[difficulty] || 1;
+
+    if (correct) {
+      setPoints((prev) => prev + multiple * 5);
+      if (difficulty === "hard") {
+        const index = Math.floor(Math.random() * 5);
+        const name =
+          planetaryResources[selectedPlanet.name][index].name.toString();
+        const value = planetaryResources[selectedPlanet.name][index].value;
+        const prevValue = playerResources[name];
+        setPlayerResources((prev) => {
+          prev[name] = (prevValue || 0) + value;
+          return prev;
+        });
+      }
+    } else {
+      setPoints((prev) => prev - 5);
     }
   };
 
@@ -44,22 +57,24 @@ function QuizModal({ selectedPlanet, onClose, onCorrect }) {
     setAnswered(false);
     setIsCorrect(false);
 
-    const newDifficulty = adjustDifficult(difficulty, secondLastAns, lastAns);
-    setDifficulty(newDifficulty);
-
-    const nextQ = getQuestion(
-      selectedPlanet.name,
-      newDifficulty,
-      secondLastAns,
-      lastAns
+    setQuestion(
+      getQuestion({
+        planet: selectedPlanet.name,
+        secondLastAns,
+        lastAns,
+      }),
     );
-
-    if (nextQ) {
-      setQuestion(nextQ);
-    } else {
-      onClose();
-    }
   };
+
+  useEffect(() => {
+    setQuestion(
+      getQuestion({
+        planet: selectedPlanet.name,
+        secondLastAns: false,
+        lastAns: false,
+      }),
+    );
+  }, []);
 
   return (
     <div style={modalStyle}>
