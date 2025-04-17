@@ -23,9 +23,9 @@ export function TradeResource({resource, fuel, setFuel, playerResources, setPlay
 
     return (
         <li className="resource" style={{ opacity: resource.available ? 1 : 0.5 }}>
-            <div className="resource-name">{resource?.name}</div>
+            <div className="resource-name" data-testid="trade-resource-name">{resource?.name}</div>
             <div>
-                <span className="fuel-value" data-testid="trade-resource-name">+{resource?.value} Fuel</span>
+                <span className="fuel-value">+{resource?.value} Fuel</span>
                 <button onClick={onTrade} disabled={!resource.available} data-testid="trade-terminal-trade-button">Trade</button>
             </div>
         </li>

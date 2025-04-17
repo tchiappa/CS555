@@ -46,7 +46,7 @@ describe('SpaceStation', () => {
 
         await userEvent.click(screen.getByTestId('space-station-enter-button'));
 
-        expect(screen.getByTestId('trade-resource-name')).toBeInTheDocument();
+        expect(screen.getByTestId('trade-resource-name')).toHaveTextContent('Water Ice');
     });
 
     it('displays the correct resources for the selected planet (Mars)', async () => {
@@ -57,7 +57,7 @@ describe('SpaceStation', () => {
 
         await userEvent.click(screen.getByTestId('space-station-enter-button'));
 
-        expect(screen.getByTestId('trade-resource-name')).toBeInTheDocument();
+        expect(screen.getByTestId('trade-resource-name')).toHaveTextContent('Red Dust');
     });
 
     it('falls back to Earth resources if the selected planet is unknown', async () => {
