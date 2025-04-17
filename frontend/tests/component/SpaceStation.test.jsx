@@ -4,7 +4,8 @@ import { describe, it, expect } from "vitest";
 import SpaceStation from "../../src/component/SpaceStation.jsx";
 import { TradeTerminal } from "../../src/component/TradeTerminal.jsx";
 import { TradeResource } from "../../src/component/TradeResource.jsx";
-import { TradeProvider } from "../../src/context/tradeContext.jsx";
+import TradeContext, { TradeProvider } from "../../src/context/tradeContext.jsx";
+import {useState} from "react";
 
 vi.mock("../../src/planetInfo/planetaryResources", () => ({
   planetaryResources: {
@@ -23,6 +24,30 @@ describe("SpaceStation", () => {
     expect(
       screen.getByTestId("space-station-enter-button"),
     ).toBeInTheDocument();
+  });
+
+  it("does not render the button after 3 station visits", () => {
+    // Custom provider to control stationVisits value
+    const MockProvider = ({ children }) => {
+      const [stationVisits, setStationVisits] = useState(3); // limit reached
+
+      return (
+          <TradeContext.Provider value={{ stationVisits, setStationVisits }}>
+            {children}
+          </TradeContext.Provider>
+      );
+    };
+
+    render(
+        <MockProvider>
+          <SpaceStation selectedPlanet={{ name: "Earth" }} />
+        </MockProvider>
+    );
+
+    // The button should not be in the document
+    expect(
+        screen.queryByTestId("space-station-enter-button")
+    ).not.toBeInTheDocument();
   });
 
   it("shows the station popup when the button is clicked", async () => {
