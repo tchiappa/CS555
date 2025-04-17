@@ -33,24 +33,12 @@ describe('Hazard', () => {
         expect(mockOnChooseOption).toHaveBeenCalledWith(hazard.options[0]);
     });
 
-    it('displays outcome and continue button when hazard is resolved', () => {
+    it('displays outcome when hazard is resolved', () => {
         const resolvedHazard = { ...hazard, resolved: 'You lost 10 fuel' };
 
         render(<Hazard hazard={resolvedHazard} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />);
 
         expect(screen.getByText('You lost 10 fuel')).toBeInTheDocument();
-        expect(screen.getByText('Continue')).toBeInTheDocument();
-    });
-
-    it('calls onClose when continue button is clicked', () => {
-        const resolvedHazard = { ...hazard, resolved: 'You lost 10 fuel' };
-
-        render(<Hazard hazard={resolvedHazard} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />);
-
-        const continueButton = screen.getByText('Continue');
-        fireEvent.click(continueButton);
-
-        expect(mockOnClose).toHaveBeenCalled();
     });
 
     it('renders nothing if no hazard is provided', () => {

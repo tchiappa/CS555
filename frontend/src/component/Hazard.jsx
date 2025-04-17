@@ -49,16 +49,6 @@ export function Hazard({ hazard, onChooseOption, onClose }) {
         fontWeight: '600',
     };
 
-    const continueButtonStyle = {
-        marginTop: '1rem',
-        padding: '0.5rem 1rem',
-        backgroundColor: '#16a34a',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '0.375rem',
-        cursor: 'pointer',
-    };
-
     return (
         <div style={overlayStyle}>
             <div style={modalStyle}>
@@ -80,9 +70,7 @@ export function Hazard({ hazard, onChooseOption, onClose }) {
                 ) : (
                     <>
                         <p style={outcomeStyle}>{hazard.resolved}</p>
-                        <button style={continueButtonStyle} onClick={onClose}>
-                            Continue
-                        </button>
+                        <p>Traveling...</p>
                     </>
                 )}
             </div>
