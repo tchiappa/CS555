@@ -9,24 +9,29 @@ const tutorialSteps = [
   },
   {
     title: "Choose a Planet",
-    description: "Click on any glowing planet to travel there. But make sure you have enough fuel!",
+    description: "Select any available planet from the menu to travel there. But be careful of the fuel cost!",
     emoji: "🪐"
   },
   {
     title: "Answer Science Quizzes",
-    description: "After landing, you’ll face fun science questions. Answer them to collect minerals and fuel.",
+    description: "Upon arrival, you’ll face fun science questions. Answer them to collect minerals and fuel.",
     emoji: "🧠"
   },
   {
-    title: "Refuel and Repair",
-    description: "Visit the ship maintenance panel to refuel and repair using collected resources.",
+    title: "Space Station",
+    description: "Visit the space station to refuel by trading in collected resources.",
     emoji: "🔧"
-  },
-  {
-    title: "Meet Your Co-Pilot!",
-    description: "The AI Co-Pilot will guide you with tips and warnings. Trust your space buddy!",
-    emoji: "🤖"
   }
+  // {
+  //   title: "Refuel and Repair",
+  //   description: "Visit the ship maintenance panel to refuel and repair using collected resources.",
+  //   emoji: "🔧"
+  // },
+  // {
+  //   title: "Meet Your Co-Pilot!",
+  //   description: "The AI Co-Pilot will guide you with tips and warnings. Trust your space buddy!",
+  //   emoji: "🤖"
+  // }
 ];
 
 export default function TutorialOverlay({ onFinish }) {
