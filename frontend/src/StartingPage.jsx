@@ -1,15 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Scene } from './Scene'; // Assuming Scene is your solar system component
+import backgroundMusic from '../src/assets/background.mp3'; // 🎵 Add your audio file here
 
 const StartingPage = () => {
   const [start, setStart] = useState(false);
+  const audioRef = useRef(null);
 
   const handleStart = () => {
     setStart(true); // Show the Scene when button is clicked
+  
+
+     // Play background music on start
+     if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+      audioRef.current.loop = true;
+      audioRef.current.play().catch((err) => {
+        console.warn('Autoplay prevented:', err);
+      });
+    }
   };
+
+  // Stop music when unmounted
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-black to-gray-900 text-white">
+      <audio ref={audioRef} src={backgroundMusic} />
       {start ? (
         <Scene />
       ) : (
