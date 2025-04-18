@@ -14,6 +14,7 @@ import SpaceStation from "./component/SpaceStation.jsx";
 import { useHazard } from "./hooks/useHazard.js";
 import { Hazard } from "./component/Hazard.jsx";
 import TradeContext from "./context/tradeContext.jsx";
+import TutorialOverlay from "./component/TutorialOverlay";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(true);
@@ -62,7 +63,10 @@ export function Scene() {
     }
   }, [currentHazard, pendingPlanet]);
 
-  const sceneRef = useRef(null);
+    const [showTutorial, setShowTutorial] = useState(true);
+
+
+    const sceneRef = useRef(null);
   const rendererRef = useRef(null);
 
   useEffect(() => {
@@ -270,6 +274,7 @@ export function Scene() {
 
   return (
     <>
+      {showTutorial && <TutorialOverlay onFinish={() => setShowTutorial(false)} />}
       <FuelStatus fuel={fuel} />
 
       {selectedPlanet && (
