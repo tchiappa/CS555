@@ -7,20 +7,19 @@ export function TradeInventory() {
         ([_, count]) => count > 0,
     );
     return (
-        <div>
-            <h2>Trade Inventory</h2>
-            <p>Inventory of items to trade for fuel.</p>
-
-            <div className="trade-panel">
-                <ul className="resource-list">
-                    {inventory.map(([name, count]) => (
-                        <li className="resource">
-                            <div className="resource-name">{name}</div>
-                            <div style={{paddingLeft: "50px"}}>{count}</div>
-                        </li>
-                    ))}
-                </ul>
+        <div className="flex-none bg-white/5 border border-teal-400 rounded-lg p-4 w-2/5 overflow-y-auto">
+            <div className="text-center space-y-2 mb-5">
+                <h2 className="text-2xl font-bold">Trade Inventory</h2>
+                <p className="text-sm">Inventory of items to trade for fuel.</p>
             </div>
+            <ul className="space-y-2">
+                {inventory.map(([name, count]) => (
+                    <li className="flex justify-between border-b border-white/10 pb-1">
+                        <span>{name}</span>
+                        <span>{count}</span>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }

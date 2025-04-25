@@ -1,4 +1,3 @@
-import "./SpaceStation.css";
 import {useContext, useState} from "react";
 import {TradeTerminal} from "./TradeTerminal.jsx";
 import {TradeInventory} from "./TradeInventory.jsx";
@@ -29,10 +28,10 @@ function SpaceStation({selectedPlanet}) {
 
         return (
             <button
-                className="enter-button"
+                className="fixed bottom-10 right-10 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg"
+                // className="fixed bottom-10 right-10 rounded-lg border-2 border-teal-300 hover:border-teal-800 px-5 py-2 bg-black hover:bg-teal-200 text-teal-300 hover:text-teal-800"
                 data-testid="space-station-enter-button"
-                onClick={handleOpen}
-            >
+                onClick={handleOpen}>
                 Space Station (Visits Remaining: {3 - stationVisits})
             </button>
         );
@@ -40,31 +39,18 @@ function SpaceStation({selectedPlanet}) {
 
     // Display the "SpaceStation" popup.
     return (
-        <div className="space-station">
-            <div className="scanline-overlay"></div>
-
-            <div className="station-light top-left"></div>
-            <div className="station-light bottom-right"></div>
-
-            <h1>Space Station</h1>
+        <div className="fixed inset-0 z-[9999] p-10 gap-8 bg-black/90 text-teal-300 flex flex-col items-center justify-start overflow-hidden">
+            <h1 className="text-xl font-bold">Space Station</h1>
             <div>Station Visits Remaining: {3 - stationVisits}</div>
 
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    columnGap: "100px",
-                }}
-            >
+            <div className="flex gap-5 w-full">
                 <TradeInventory/>
                 <TradeTerminal selectedPlanet={selectedPlanet}/>
             </div>
             <button
-                className="exit-button"
+                className="mt-auto rounded-lg border-2 border-teal-300 hover:border-teal-800 px-5 py-2 bg-black hover:bg-teal-200 text-teal-300 hover:text-teal-800"
                 data-testid="space-station-exit-button"
-                onClick={handleClose}
-            >
+                onClick={handleClose}>
                 Leave Station
             </button>
         </div>

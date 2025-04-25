@@ -46,50 +46,15 @@ export default function TutorialOverlay({ onFinish }) {
   };
 
   return (
-    <div style={overlayStyle}>
-      <div style={cardStyle}>
-        <h2>{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
-        <p style={{ fontSize: "16px", marginTop: "10px" }}>{tutorialSteps[step].description}</p>
-        <button onClick={nextStep} style={buttonStyle}>
+    <div className="fixed top-0 left-0 z=[99999] w-screen h-screen bg-black/90 flex justify-center items-center text-white">
+      <div className="bg-zinc-800 p-5 rounded-xl text-center w-md">
+        <h2 className="text-xl">{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
+        <p className="text-lg mt-5">{tutorialSteps[step].description}</p>
+        <button onClick={nextStep} className="mt-5 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg">
+        {/*<button onClick={nextStep} className="rounded-xl mt-5 py-3 px-5 text-lg bg-teal-600 hover:bg-teal-800 text-white">*/}
           {step === tutorialSteps.length - 1 ? "Let’s Go!" : "Next »"}
         </button>
       </div>
     </div>
   );
 }
-
-const overlayStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0, 0, 0, 0.9)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 99999,
-  color: "white",
-  fontFamily: "Comic Sans MS, sans-serif"
-};
-
-const cardStyle = {
-  backgroundColor: "#222",
-  padding: "30px",
-  borderRadius: "15px",
-  textAlign: "center",
-  maxWidth: "500px",
-  width: "80%",
-  boxShadow: "0 0 20px rgba(255, 255, 255, 0.2)"
-};
-
-const buttonStyle = {
-  marginTop: "20px",
-  padding: "10px 20px",
-  fontSize: "16px",
-  backgroundColor: "#00bcd4",
-  color: "white",
-  border: "none",
-  borderRadius: "8px",
-  cursor: "pointer"
-};
