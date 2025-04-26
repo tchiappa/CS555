@@ -77,10 +77,10 @@ function QuizModal({selectedPlanet, onClose}) {
     }, []);
 
     return (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 border-2 border-black rounded-lg z-[1000] text-center">
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-linear-to-br from-gray-800/95 to-gray-900/95 text-white p-10 rounded-lg z-[1000] text-center max-w-3xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl">Quiz: {selectedPlanet.name}</h2>
-              <button onClick={onClose} className="p-1 px-4 bg-red-600 hover:bg-red-800 text-white rounded-lg transition">
+              <button onClick={onClose} className="p-1 px-6 bg-red-600 hover:bg-red-800 text-white rounded-lg transition">
                 Quit
               </button>
             </div>
@@ -111,7 +111,7 @@ function QuizModal({selectedPlanet, onClose}) {
                                     ❌ Incorrect. The answer is: {question.answer}
                                 </p>
                             )}
-                            <button onClick={handleNext} className="p-2 bg-blue-600 hover:bg-blue-800 text-white rounded-lg transition">
+                            <button onClick={handleNext} className="p-2 px-6 bg-blue-600 hover:bg-blue-800 text-white rounded-lg transition">
                                 Next
                             </button>
                         </div>

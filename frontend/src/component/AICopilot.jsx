@@ -1,5 +1,5 @@
-import React from "react";
-import { useGame } from "../context/GameContext";
+import React, {useContext, useState} from "react";
+import TradeContext from "../context/tradeContext.jsx";
 
 const messages = [
   "Welcome aboard, Captain. Ready for your first mission?",
@@ -10,15 +10,15 @@ const messages = [
 ];
 
 export default function AICopilot() {
-  const { resources } = useGame();
-  const [message, setMessage] = React.useState(messages[0]);
-  const [warning, setWarning] = React.useState(null);
+  const {fuel} = useContext(TradeContext);
+  const [message, setMessage] = useState(messages[0]);
+  const [warning, setWarning] = useState(null);
 
   React.useEffect(() => {
-    if (resources.fuel < 20) {
+    if (fuel <= 6 ) {
+      setWarning("⚠️ Fuel is too low for travel home!");
+    } else if (fuel <= 2) {
       setWarning("⚠️ Fuel is too low for interplanetary travel!");
-    } else if (resources.health < 30) {
-      setWarning("⚠️ Ship integrity critical. Repair immediately.");
     } else {
       setWarning(null);
     }
@@ -31,37 +31,16 @@ export default function AICopilot() {
     }, 20000);
 
     return () => clearInterval(interval);
-  }, [resources.fuel, resources.health]);
+  }, [fuel]);
 
   return (
-    <div style={{ ...copilotStyle, ...(warning ? flashingWarning : {}) }}>
-      <p>🧠 <strong>AI Co-Pilot:</strong></p>
-      <p style={{ fontStyle: "italic" }}>{warning || message}</p>
-      <div style={{ marginTop: "10px", fontSize: "13px", color: "#ccc" }}>
-        ⛽ Fuel: {resources.fuel} | 🛠 Health: {resources.health} | 💨 Oxygen: {resources.oxygen} | 🪨 Minerals: {resources.minerals}
-      </div>
+      <div
+          className={`
+            my-4 bg-linear-to-br from-slate-800 to-slate-900 text-white px-6 py-6 rounded-xl w-3/4
+            ${warning ? "animate-pulse text-red-400 shadow-[0_0_20px_red]" : ""}
+          `}>
+        <p>🧠 <strong>AI Co-Pilot:</strong></p>
+        <p className="italic">{warning || message}</p>
     </div>
   );
 }
-
-const copilotStyle = {
-  position: "fixed",
-  bottom: "20px",
-  right: "20px",
-  backgroundColor: "#111",
-  color: "#0ff",
-  padding: "15px",
-  borderRadius: "10px",
-  width: "320px",
-  fontFamily: "monospace",
-  fontSize: "14px",
-  boxShadow: "0 0 10px rgba(0, 255, 255, 0.3)",
-  zIndex: 9999,
-  transition: "box-shadow 0.5s ease",
-};
-
-const flashingWarning = {
-  animation: "flashWarning 1s infinite alternate",
-  boxShadow: "0 0 20px red",
-  color: "#ff6666"
-};

@@ -2,12 +2,18 @@ import React, {useEffect, useState, useContext} from "react";
 import {ChoosePlanet} from "./ChoosePlanet.jsx";
 import {PlanetJourney} from "./PlanetJourney.jsx";
 import FuelStatus from "./FuelStatus.jsx";
-import SpaceStation from "./SpaceStation.jsx";
 import {useHazard} from "../hooks/useHazard.js";
 import {Hazard} from "./Hazard.jsx";
 import TradeContext from "../context/tradeContext.jsx";
 import TutorialOverlay from "./TutorialOverlay.jsx";
 import SolarSystem from "./SolarSystem.jsx";
+import LeftPanel from "./LeftPanel.jsx";
+import RightPanel from "./RightPanel.jsx";
+import ScoreStatus from "./ScoreStatus.jsx";
+import InventoryStatus from "./InventoryStatus.jsx";
+import {ContainerProvider} from "../context/ContainerContext.jsx";
+import SpaceStation from "./SpaceStation.jsx";
+import AICopilot from "./AICopilot.jsx";
 
 export function Game() {
     const [showTutorial, setShowTutorial] = useState(true);
@@ -38,17 +44,11 @@ export function Game() {
         });
     };
 
-    useEffect(() => {
-        if (currentHazard && currentHazard.resolved && pendingPlanet) {
-            const timeout = setTimeout(() => {
-                setSelectedPlanet(pendingPlanet);
-                setPendingPlanet(null);
-                clearHazard();
-            }, 2000); // or however long you want the result to show
-
-            return () => clearTimeout(timeout);
-        }
-    }, [currentHazard, pendingPlanet]);
+    const handleHazard = (e) => {
+        setSelectedPlanet(pendingPlanet);
+        setPendingPlanet(null);
+        clearHazard();
+    };
 
     const handlePlanetSelect = (planet) => {
         console.log("🌍 Planet selected in Scene:", planet);
@@ -65,7 +65,7 @@ export function Game() {
     };
 
     return (
-        <>
+        <ContainerProvider>
             <SolarSystem />
 
             {showTutorial && (
@@ -74,40 +74,35 @@ export function Game() {
                 />
             )}
 
-            <FuelStatus fuel={fuel}/>
-
             <Hazard
                 hazard={currentHazard}
                 onChooseOption={(opt) => resolveHazard(opt, updateStats)}
-                onClose={clearHazard}
+                onClose={handleHazard}
             />
 
-            <div className="flex items-center justify-center h-screen w-1/4 bg-zinc-900/75 text-white">
-                {/* Show ChoosePlanet only when there's no selected planet */}
-                {!selectedPlanet && (
-                    <ChoosePlanet onPlanetSelect={handlePlanetSelect}/>
-                )}
+            {/* Right now the RightPanel has to come before the LeftPanel for the SpaceStation to show correctly.
+            This is not exactly an ideal situation. */}
+            <RightPanel>
+                <FuelStatus />
+                <ScoreStatus />
+                <InventoryStatus />
+                <AICopilot />
+            </RightPanel>
 
-                {/* Always show the planet journey/info panel if a planet is selected */}
-                {selectedPlanet && (
-                    <>
-                        <SpaceStation
-                            selectedPlanet={selectedPlanet}
-                            fuel={fuel}
-                            setFuel={setFuel}
-                            playerResources={playerResources}
-                            setPlayerResources={setPlayerResources}
-                        />
-
-                        <PlanetJourney
-                            selectedPlanet={selectedPlanet}
-                            onExit={() => {
-                                setSelectedPlanet(null);
-                            }}
-                        />
-                    </>
+            <LeftPanel>
+                {selectedPlanet ? (
+                    <PlanetJourney
+                        selectedPlanet={selectedPlanet}
+                        onExit={() => setSelectedPlanet(null)}
+                    />
+                ) : (
+                    <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
                 )}
-            </div>
-        </>
+            </LeftPanel>
+
+            {selectedPlanet && (
+                <SpaceStation selectedPlanet={selectedPlanet} />
+            )}
+        </ContainerProvider>
     );
 }

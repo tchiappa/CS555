@@ -10,62 +10,14 @@ import getNebula from "../utils/getNebula.js";
 export default function SolarSystem() {
 
     const planetData = [
-        {
-            size: 0.1,
-            distance: 1.25,
-            img: "mercury.png",
-            name: "Mercury",
-            speed: 0.02,
-        },
-        {
-            size: 0.2,
-            distance: 1.65,
-            img: "venus.png",
-            name: "Venus",
-            speed: 0.015,
-        },
-        {
-            size: 0.225,
-            distance: 2.0,
-            img: "earth.png",
-            name: "Earth",
-            speed: 0.01,
-        },
-        {
-            size: 0.15,
-            distance: 2.25,
-            img: "mars.png",
-            name: "Mars",
-            speed: 0.008,
-        },
-        {
-            size: 0.4,
-            distance: 2.75,
-            img: "jupiter.png",
-            name: "Jupiter",
-            speed: 0.005,
-        },
-        {
-            size: 0.35,
-            distance: 3.25,
-            img: "saturn.png",
-            name: "Saturn",
-            speed: 0.004,
-        },
-        {
-            size: 0.3,
-            distance: 3.75,
-            img: "uranus.png",
-            name: "Uranus",
-            speed: 0.003,
-        },
-        {
-            size: 0.3,
-            distance: 4.25,
-            img: "neptune.png",
-            name: "Neptune",
-            speed: 0.002,
-        },
+        { size: 0.1, distance: 1.25, img: "mercury.png", name: "Mercury", speed: 0.02 },
+        { size: 0.2, distance: 1.65, img: "venus.png", name: "Venus", speed: 0.015 },
+        { size: 0.225, distance: 2.0, img: "earth.png", name: "Earth", speed: 0.01 },
+        { size: 0.15, distance: 2.25, img: "mars.png", name: "Mars", speed: 0.008 },
+        { size: 0.4, distance: 2.75, img: "jupiter.png", name: "Jupiter", speed: 0.005 },
+        { size: 0.35, distance: 3.25, img: "saturn.png", name: "Saturn", speed: 0.004 },
+        { size: 0.3, distance: 3.75, img: "uranus.png", name: "Uranus", speed: 0.003 },
+        { size: 0.3, distance: 4.25, img: "neptune.png", name: "Neptune", speed: 0.002 }
     ];
 
     useEffect(() => {
@@ -163,7 +115,7 @@ export default function SolarSystem() {
             return planet;
         });
 
-        solarSystem.add(getElipticLines());
+        //solarSystem.add(getElipticLines());
 
         scene.add(solarSystem);
         scene.add(getStarfield({numStars: 1000, size: 0.5}));

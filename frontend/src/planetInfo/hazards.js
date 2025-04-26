@@ -3,6 +3,7 @@ export const hazards = [
         id: 'meteor-shower',
         name: 'Meteor Shower Detected!',
         description: 'A dense field of meteors is in your path.',
+        img: 'meteors.gif',
         options: [
             {
                 text: 'Reroute around it',
@@ -22,6 +23,7 @@ export const hazards = [
         id: 'solar-flare',
         name: 'Solar Flare Incoming!',
         description: 'Intense radiation threatens your systems.',
+        img: 'meteors.gif',
         options: [
             {
                 text: 'Power down and wait it out',

@@ -6,7 +6,7 @@ const Welcome = ({handleStart}) => {
                 Embark on an educational space exploration journey! Choose your starting planet, answer space
                 trivia, and collect resources as you travel through the solar system.
             </p>
-            <button onClick={handleStart} className="mt-8 px-6 py-3 bg-blue-500 hover:bg-blue-400 text-white text-lg font-semibold rounded-2xl shadow-lg transition duration-300">Start Exploration</button>
+            <button onClick={handleStart} className="mt-8 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-lg font-semibold text-white disabled:text-zinc-400 mb-2 rounded-lg transition">Start Exploration</button>
         </div>
     );
 };
