@@ -4,7 +4,7 @@ import {PlanetJourney} from "./PlanetJourney.jsx";
 import FuelStatus from "./FuelStatus.jsx";
 import {useHazard} from "../hooks/useHazard.js";
 import {Hazard} from "./Hazard.jsx";
-import TradeContext from "../context/tradeContext.jsx";
+import GameContext from "../context/GameContext.jsx";
 import TutorialOverlay from "./TutorialOverlay.jsx";
 import SolarSystem from "./SolarSystem.jsx";
 import LeftPanel from "./LeftPanel.jsx";
@@ -20,7 +20,7 @@ export function Game() {
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [pendingPlanet, setPendingPlanet] = useState(null);
 
-    const {playerResources, setPlayerResources, fuel, setFuel} = useContext(TradeContext);
+    const {playerResources, setPlayerResources, fuel, setFuel} = useContext(GameContext);
 
     // HAZARDS
     const {currentHazard, maybeTriggerHazard, resolveHazard, clearHazard} = useHazard();

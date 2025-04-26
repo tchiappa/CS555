@@ -1,4 +1,4 @@
-import {TradeProvider} from "./context/tradeContext";
+import {GameProvider} from "./context/GameContext.jsx";
 import React, {useEffect, useRef, useState} from "react";
 import backgroundMusic from "./assets/background.mp3";
 import {Game} from "./component/Game.jsx";
@@ -31,14 +31,14 @@ function App() {
     }, []);
 
     return (
-        <TradeProvider>
+        <GameProvider>
             <audio ref={audioRef} src={backgroundMusic}/>
             {start ? (
                 <Game/>
             ) : (
                 <Welcome handleStart={handleStart}/>
             )}
-        </TradeProvider>
+        </GameProvider>
     );
 }
 

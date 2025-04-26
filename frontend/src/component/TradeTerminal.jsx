@@ -1,10 +1,10 @@
 import {useContext} from "react";
 import {TradeResource} from "./TradeResource.jsx";
-import TradeContext from "../context/tradeContext.jsx";
+import GameContext from "../context/GameContext.jsx";
 
 export function TradeTerminal({selectedPlanet}) {
     const {fuel, playerResources, planetaryResources} =
-        useContext(TradeContext);
+        useContext(GameContext);
 
     const baseResources =
         planetaryResources[selectedPlanet?.name] || planetaryResources["Earth"];

@@ -1,10 +1,10 @@
 import {useContext} from "react";
-import TradeContext from "../context/tradeContext.jsx";
+import GameContext from "../context/GameContext.jsx";
 import ContainerContext from "../context/ContainerContext.jsx";
 
 export default function SpaceStationButton() {
     const {setSidebarsActive, setSpaceStationActive} = useContext(ContainerContext);
-    const {stationVisits, setStationVisits} = useContext(TradeContext);
+    const {stationVisits, setStationVisits} = useContext(GameContext);
 
     function handleOpen(e) {
         e.stopPropagation();

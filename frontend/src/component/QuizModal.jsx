@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from "react";
-import TradeContext from "../context/tradeContext";
+import GameContext from "../context/GameContext.jsx";
 
 function QuizModal({selectedPlanet, onClose}) {
     const [secondLastAns, setSecondLastAns] = useState(null);
@@ -13,7 +13,7 @@ function QuizModal({selectedPlanet, onClose}) {
         difficulty,
         getQuestion,
         playerResources,
-    } = useContext(TradeContext);
+    } = useContext(GameContext);
 
     const [question, setQuestion] = useState(null);
 

@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import TradeContext from "../context/tradeContext";
+import GameContext from "../context/GameContext.jsx";
 
 // You can move this to a shared data file if you want reuse
 let planets = [
@@ -15,7 +15,7 @@ let planets = [
 
 export function ChoosePlanet({onPlanetSelect}) {
     const [selectedPlanet, setSelectedPlanet] = useState(null);
-    const {fuel} = useContext(TradeContext);
+    const {fuel} = useContext(GameContext);
 
     const handleSelection = (planetName) => {
         const found = planets.find((p) => p.name === planetName);

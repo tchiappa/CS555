@@ -1,12 +1,12 @@
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {TradeTerminal} from "./TradeTerminal.jsx";
 import {TradeInventory} from "./TradeInventory.jsx";
-import TradeContext from "../context/tradeContext.jsx";
+import GameContext from "../context/GameContext.jsx";
 import ContainerContext from "../context/ContainerContext.jsx";
 
 function SpaceStation({selectedPlanet}) {
     const {setSidebarsActive, spaceStationActive, setSpaceStationActive} = useContext(ContainerContext);
-    const {stationVisits} = useContext(TradeContext);
+    const {stationVisits} = useContext(GameContext);
 
     function handleClose(e) {
         e.stopPropagation();

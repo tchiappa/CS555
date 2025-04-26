@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import TradeContext from "../context/tradeContext.jsx";
+import GameContext from "../context/GameContext.jsx";
 
 const messages = [
   "Welcome aboard, Captain. Ready for your first mission?",
@@ -10,7 +10,7 @@ const messages = [
 ];
 
 export default function AICopilot() {
-  const {fuel} = useContext(TradeContext);
+  const {fuel} = useContext(GameContext);
   const [message, setMessage] = useState(messages[0]);
   const [warning, setWarning] = useState(null);
 
