@@ -18,6 +18,10 @@ function SpaceStation({selectedPlanet}) {
         return null;
     }
 
+    if (stationVisits >= 3) {
+        return null;
+    }
+
     // Display the "SpaceStation" popup.
     return (
         <div className="fixed inset-0 z-[9999] p-10 gap-8 bg-black/90 text-teal-300 flex flex-col items-center justify-start overflow-hidden">

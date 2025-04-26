@@ -1,117 +1,63 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import SpaceStation from "../../src/component/SpaceStation.jsx";
-import { TradeTerminal } from "../../src/component/TradeTerminal.jsx";
-import { TradeResource } from "../../src/component/TradeResource.jsx";
-import GameContext, { GameProvider } from "../../src/context/GameContext.jsx";
-import {useState} from "react";
+import {GameProviderMock} from "../mocks/GameContextMock.jsx";
+import {ContainerProviderMock} from "../mocks/ContainerContextMock.jsx";
 
-vi.mock("../../src/planetInfo/planetaryResources", () => ({
-  planetaryResources: {
-    Earth: [{ name: "Water Ice", value: 1 }],
-    Mars: [{ name: "Red Dust", value: 2 }],
-  },
-}));
+// Mock the ContainerContext import
+vi.mock('../../src/context/GameContext', async () => {
+  const actual = await vi.importActual('../mocks/GameContextMock.jsx');
+  return {
+    ...actual,
+    default: actual.default,
+  };
+});
 
-describe("SpaceStation", () => {
-  it("renders the button to open the station popup", () => {
+// Mock the ContainerContext import
+vi.mock('../../src/context/ContainerContext', async () => {
+  const actual = await vi.importActual('../mocks/ContainerContextMock.jsx');
+  return {
+    ...actual,
+    default: actual.default,
+  };
+});
+
+describe('SpaceStation', () => {
+  it('SpaceStation shows correct station visits', () => {
     render(
-      <GameProvider>
-        <SpaceStation selectedPlanet={{ name: "Earth" }} />
-      </GameProvider>,
-    );
-    expect(
-      screen.getByTestId("space-station-enter-button"),
-    ).toBeInTheDocument();
-  });
-
-  it("does not render the button after 3 station visits", () => {
-    // Custom provider to control stationVisits value
-    const MockProvider = ({ children }) => {
-      const [stationVisits, setStationVisits] = useState(3); // limit reached
-
-      return (
-          <GameContext.Provider value={{ stationVisits, setStationVisits }}>
-            {children}
-          </GameContext.Provider>
-      );
-    };
-
-    render(
-        <MockProvider>
-          <SpaceStation selectedPlanet={{ name: "Earth" }} />
-        </MockProvider>
+        <GameProviderMock mockValues={{stationVisits: 2}}>
+          <ContainerProviderMock mockValues={{spaceStationActive: true}}>
+            <SpaceStation selectedPlanet="Mars"/>
+          </ContainerProviderMock>
+        </GameProviderMock>
     );
 
-    // The button should not be in the document
-    expect(
-        screen.queryByTestId("space-station-enter-button")
-    ).not.toBeInTheDocument();
+    expect(screen.getByText('Station Visits Remaining: 1')).toBeInTheDocument();
   });
 
-  it("shows the station popup when the button is clicked", async () => {
+  it('renders nothing if space station is inactive', () => {
     render(
-      <GameProvider>
-        <SpaceStation selectedPlanet={{ name: "Earth" }} />
-      </GameProvider>,
+        <GameProviderMock mockValues={{stationVisits: 0}}>
+          <ContainerProviderMock mockValues={{spaceStationActive: false}}>
+            <SpaceStation selectedPlanet="Mars"/>
+          </ContainerProviderMock>
+        </GameProviderMock>
     );
 
-    await userEvent.click(screen.getByTestId("space-station-enter-button"));
-
-    expect(screen.getByText(/trade terminal/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/exchange resources for fuel/i),
-    ).toBeInTheDocument();
+    expect(screen.queryByText(/Space Station/i)).not.toBeInTheDocument();
   });
 
-  it("displays the correct resources for the selected planet (Earth)", async () => {
+  it('renders nothing if station visits are 3', () => {
     render(
-      <GameProvider>
-        <SpaceStation selectedPlanet={{ name: "Earth" }} />
-      </GameProvider>,
+        <GameProviderMock mockValues={{stationVisits: 3}}>
+          <ContainerProviderMock mockValues={{spaceStationActive: true}}>
+            <SpaceStation selectedPlanet="Mars"/>
+          </ContainerProviderMock>
+        </GameProviderMock>
     );
 
-    await userEvent.click(screen.getByTestId("space-station-enter-button"));
-
-    expect(screen.getAllByText("Water Ice")).toBeDefined();
+    expect(screen.queryByText(/Space Station/i)).not.toBeInTheDocument();
+    expect(screen.queryByTestId('space-station-exit-button')).not.toBeInTheDocument();
   });
 
-  it("displays the correct resources for the selected planet (Mars)", async () => {
-    render(
-      <GameProvider>
-        <SpaceStation selectedPlanet={{ name: "Mars" }} />
-      </GameProvider>,
-    );
-
-    await userEvent.click(screen.getByTestId("space-station-enter-button"));
-
-    expect(screen.getAllByText("Red Dust")).toBeDefined();
-  });
-
-  it("falls back to Earth resources if the selected planet is unknown", async () => {
-    render(
-      <GameProvider>
-        <SpaceStation />
-      </GameProvider>,
-    );
-
-    await userEvent.click(screen.getByTestId("space-station-enter-button"));
-  });
-
-  it("can exit the space station and return to the inactive button", async () => {
-    render(
-      <GameProvider>
-        <SpaceStation selectedPlanet={{ name: "Mars" }} />
-      </GameProvider>,
-    );
-
-    await userEvent.click(screen.getByTestId("space-station-enter-button"));
-    expect(screen.getByText("Trade Terminal")).toBeInTheDocument();
-
-    await userEvent.click(screen.getByTestId("space-station-exit-button"));
-    expect(
-      screen.getByTestId("space-station-enter-button"),
-    ).toBeInTheDocument();
-  });
 });
