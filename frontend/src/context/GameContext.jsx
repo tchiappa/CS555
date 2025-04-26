@@ -1,9 +1,9 @@
 import { createContext, useState } from "react";
 import questions from "../planetInfo/data.js";
 
-const TradeContext = createContext({});
+const GameContext = createContext({});
 
-export const TradeProvider = ({ children }) => {
+export const GameProvider = ({ children }) => {
   const [stationVisits, setStationVisits] = useState(0);
 
   const [playerResources, setPlayerResources] = useState({
@@ -103,7 +103,7 @@ export const TradeProvider = ({ children }) => {
   }
 
   return (
-    <TradeContext.Provider
+    <GameContext.Provider
       value={{
         stationVisits,
         setStationVisits,
@@ -122,8 +122,8 @@ export const TradeProvider = ({ children }) => {
       }}
     >
       {children}
-    </TradeContext.Provider>
+    </GameContext.Provider>
   );
 };
 
-export default TradeContext;
+export default GameContext;

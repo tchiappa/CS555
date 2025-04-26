@@ -1,8 +1,8 @@
 import {useContext} from "react";
-import TradeContext from "../context/tradeContext";
+import GameContext from "../context/GameContext.jsx";
 
 export function TradeInventory() {
-    const {playerResources} = useContext(TradeContext);
+    const {playerResources} = useContext(GameContext);
     const inventory = Object.entries(playerResources).filter(
         ([_, count]) => count > 0,
     );

@@ -4,7 +4,7 @@ import { describe, it, expect } from "vitest";
 import SpaceStation from "../../src/component/SpaceStation.jsx";
 import { TradeTerminal } from "../../src/component/TradeTerminal.jsx";
 import { TradeResource } from "../../src/component/TradeResource.jsx";
-import TradeContext, { TradeProvider } from "../../src/context/tradeContext.jsx";
+import GameContext, { GameProvider } from "../../src/context/GameContext.jsx";
 import {useState} from "react";
 
 vi.mock("../../src/planetInfo/planetaryResources", () => ({
@@ -17,9 +17,9 @@ vi.mock("../../src/planetInfo/planetaryResources", () => ({
 describe("SpaceStation", () => {
   it("renders the button to open the station popup", () => {
     render(
-      <TradeProvider>
+      <GameProvider>
         <SpaceStation selectedPlanet={{ name: "Earth" }} />
-      </TradeProvider>,
+      </GameProvider>,
     );
     expect(
       screen.getByTestId("space-station-enter-button"),
@@ -32,9 +32,9 @@ describe("SpaceStation", () => {
       const [stationVisits, setStationVisits] = useState(3); // limit reached
 
       return (
-          <TradeContext.Provider value={{ stationVisits, setStationVisits }}>
+          <GameContext.Provider value={{ stationVisits, setStationVisits }}>
             {children}
-          </TradeContext.Provider>
+          </GameContext.Provider>
       );
     };
 
@@ -52,9 +52,9 @@ describe("SpaceStation", () => {
 
   it("shows the station popup when the button is clicked", async () => {
     render(
-      <TradeProvider>
+      <GameProvider>
         <SpaceStation selectedPlanet={{ name: "Earth" }} />
-      </TradeProvider>,
+      </GameProvider>,
     );
 
     await userEvent.click(screen.getByTestId("space-station-enter-button"));
@@ -67,9 +67,9 @@ describe("SpaceStation", () => {
 
   it("displays the correct resources for the selected planet (Earth)", async () => {
     render(
-      <TradeProvider>
+      <GameProvider>
         <SpaceStation selectedPlanet={{ name: "Earth" }} />
-      </TradeProvider>,
+      </GameProvider>,
     );
 
     await userEvent.click(screen.getByTestId("space-station-enter-button"));
@@ -79,9 +79,9 @@ describe("SpaceStation", () => {
 
   it("displays the correct resources for the selected planet (Mars)", async () => {
     render(
-      <TradeProvider>
+      <GameProvider>
         <SpaceStation selectedPlanet={{ name: "Mars" }} />
-      </TradeProvider>,
+      </GameProvider>,
     );
 
     await userEvent.click(screen.getByTestId("space-station-enter-button"));
@@ -91,9 +91,9 @@ describe("SpaceStation", () => {
 
   it("falls back to Earth resources if the selected planet is unknown", async () => {
     render(
-      <TradeProvider>
+      <GameProvider>
         <SpaceStation />
-      </TradeProvider>,
+      </GameProvider>,
     );
 
     await userEvent.click(screen.getByTestId("space-station-enter-button"));
@@ -101,9 +101,9 @@ describe("SpaceStation", () => {
 
   it("can exit the space station and return to the inactive button", async () => {
     render(
-      <TradeProvider>
+      <GameProvider>
         <SpaceStation selectedPlanet={{ name: "Mars" }} />
-      </TradeProvider>,
+      </GameProvider>,
     );
 
     await userEvent.click(screen.getByTestId("space-station-enter-button"));

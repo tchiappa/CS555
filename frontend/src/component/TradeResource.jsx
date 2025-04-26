@@ -1,9 +1,9 @@
 import {useContext} from "react";
-import TradeContext from "../context/tradeContext";
+import GameContext from "../context/GameContext.jsx";
 
 export function TradeResource({resource}) {
     const {playerResources, setPlayerResources, fuel, setFuel} =
-        useContext(TradeContext);
+        useContext(GameContext);
 
     function onTrade(e) {
         e.stopPropagation();

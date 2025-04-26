@@ -1,9 +1,9 @@
 // src/components/FuelStatus.jsx
 import React, {useContext} from "react";
-import TradeContext from "../context/tradeContext";
+import GameContext from "../context/GameContext.jsx";
 
 export default function InventoryStatus() {
-    const {playerResources} = useContext(TradeContext);
+    const {playerResources} = useContext(GameContext);
     const inventory = Object.entries(playerResources).filter(
         ([_, count]) => count > 0,
     );
