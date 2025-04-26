@@ -64,6 +64,13 @@ export function PlanetJourney({selectedPlanet, onExit}) {
                     <div className="mt-10">
                         <SpaceStationButton />
                     </div>
+                    <div>
+                        <button
+                            className="mt-10 p-2 px-6 bg-orange-600 hover:bg-orange-800 mb-2 rounded-lg"
+                            onClick={onExit}>
+                            Leave Orbit
+                        </button>
+                    </div>
                 </div>
             )}
 
@@ -86,7 +93,7 @@ export function PlanetJourney({selectedPlanet, onExit}) {
                     selectedPlanet={selectedPlanet}
                     onClose={() => {
                         setShowQuiz(false);
-                        onExit();
+                        //onExit();
                     }}
                 />
             )}

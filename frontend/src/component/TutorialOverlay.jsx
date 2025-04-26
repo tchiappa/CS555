@@ -52,7 +52,7 @@ export default function TutorialOverlay({ onFinish }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 z-[9999] w-screen h-screen bg-black/75 flex justify-center items-center text-white">
+    <div className="fixed top-0 left-0 z-[9999] w-screen h-screen bg-black/50 flex justify-center items-center text-white">
       <div className="bg-black/75 text-white text-center p-20 rounded-4xl w-lg h-lg">
         <h2 className="text-xl">{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
         <p className="text-lg mt-5">{tutorialSteps[step].description}</p>

@@ -13,7 +13,7 @@ export function Hazard({ hazard, onChooseOption, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999]">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
             <div className="bg-black/75 text-white text-center p-20 rounded-4xl w-lg">
                 <h2 className="font-xl font-bold my-2">{hazard.name}</h2>
                 <p className="mb-5">{hazard.description}</p>

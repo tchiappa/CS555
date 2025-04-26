@@ -3,14 +3,14 @@ import GameContext from "../context/GameContext.jsx";
 
 // You can move this to a shared data file if you want reuse
 let planets = [
-    {name: "Mercury", image: "./giphy.gif", fuelCoast: 2, traveled: false},
-    {name: "Venus", image: "./vgiphy.gif", fuelCoast: 4, traveled: false},
-    {name: "Earth", image: "./egiphy.gif", fuelCoast: 6, traveled: false},
-    {name: "Mars", image: "./mgiphy.gif", fuelCoast: 8, traveled: false},
-    {name: "Jupiter", image: "./jgiphy.gif", fuelCoast: 10, traveled: false},
-    {name: "Saturn", image: "./sgiphy.gif", fuelCoast: 12, traveled: false},
-    {name: "Uranus", image: "./ugiphy.gif", fuelCoast: 14, traveled: false},
-    {name: "Neptune", image: "./ngiphy.gif", fuelCoast: 16, traveled: false}
+    {name: "Mercury", symbol: "263F", image: "./giphy.gif", fuelCoast: 2, traveled: false},
+    {name: "Venus", symbol: "2640", image: "./vgiphy.gif", fuelCoast: 4, traveled: false},
+    {name: "Earth", symbol: "2641", image: "./egiphy.gif", fuelCoast: 6, traveled: false},
+    {name: "Mars", symbol: "2642", image: "./mgiphy.gif", fuelCoast: 8, traveled: false},
+    {name: "Jupiter", symbol: "2643", image: "./jgiphy.gif", fuelCoast: 10, traveled: false},
+    {name: "Saturn", symbol: "2644", image: "./sgiphy.gif", fuelCoast: 12, traveled: false},
+    {name: "Uranus", symbol: "26E2", image: "./ugiphy.gif", fuelCoast: 14, traveled: false},
+    {name: "Neptune", symbol: "2646", image: "./ngiphy.gif", fuelCoast: 16, traveled: false}
 ];
 
 export function ChoosePlanet({onPlanetSelect}) {
@@ -50,7 +50,7 @@ export function ChoosePlanet({onPlanetSelect}) {
                                 : 'bg-linear-to-br from-indigo-800 to-indigo-900 hover:from-indigo-900 hover:to-indigo-950 text-white hover:scale-105 cursor-pointer'
                         }`}
                     >
-                        <div className="font-bold">{planet.name}</div>
+                        <div className="font-bold">{String.fromCharCode(parseInt(planet.symbol,16))} {planet.name}</div>
                         <div className="text-sm">
                             {planet.traveled
                                 ? '(Already Visited)'

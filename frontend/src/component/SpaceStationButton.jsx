@@ -20,7 +20,7 @@ export default function SpaceStationButton() {
 
     return (
         <button
-            className="p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg"
+            className="p-2 px-6 bg-teal-900 hover:bg-teal-950 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg"
             data-testid="space-station-enter-button"
             onClick={handleOpen}>
             Space Station (Visits Remaining: {3 - stationVisits})
