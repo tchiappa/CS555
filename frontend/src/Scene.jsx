@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import getSun from "./getSun.js";
@@ -13,6 +13,9 @@ import FuelStatus from "./component/FuelStatus.jsx";
 import SpaceStation from "./component/SpaceStation.jsx";
 import { useHazard } from "./hooks/useHazard.js";
 import { Hazard } from "./component/Hazard.jsx";
+import { EndGame } from "./component/EndGame.jsx";
+import TradeContext from "./context/tradeContext.jsx";
+import GameOver from "./component/GameOver.jsx";
 
 export function Scene() {
   const [popUp, setPopUp] = useState(true);
@@ -22,6 +25,7 @@ export function Scene() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [fuel, setFuel] = useState(25);
   const [currentPlanet, setCurrentPlanet] = useState("Earth");
+  const {end} = useContext(TradeContext);
 
   // SpaceStation TEST DATA
   // TODO: Adapt SpaceStation to use "real" player resource format and plantaryResources, whatever those might be.
@@ -275,59 +279,68 @@ export function Scene() {
 
   return (
     <>
-      <FuelStatus fuel={fuel} />
+      {
+      !end &&
+      <>
+        <FuelStatus fuel={fuel} />
 
-      {selectedPlanet && (
-        <SpaceStation
-          selectedPlanet={selectedPlanet}
-          fuel={fuel}
-          setFuel={setFuel}
-          playerResources={playerResources}
-          setPlayerResources={setPlayerResources}
+        {selectedPlanet && (
+          <SpaceStation
+            selectedPlanet={selectedPlanet}
+            fuel={fuel}
+            setFuel={setFuel}
+            playerResources={playerResources}
+            setPlayerResources={setPlayerResources}
+          />
+        )}
+        
+        <EndGame/>
+
+        <Hazard
+          hazard={currentHazard}
+          onChooseOption={(opt) => resolveHazard(opt, updateStats)}
+          onClose={clearHazard}
         />
-      )}
 
-      <Hazard
-        hazard={currentHazard}
-        onChooseOption={(opt) => resolveHazard(opt, updateStats)}
-        onClose={clearHazard}
-      />
+        {/* Show ChoosePlanet only when there's no selected planet */}
+        {popUp && !selectedPlanet && (
+          <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+        )}
 
-      {/* Show ChoosePlanet only when there's no selected planet */}
-      {popUp && !selectedPlanet && (
-        <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
-      )}
-
-      {/* Always show the planet journey/info panel if a planet is selected */}
-      {selectedPlanet && (
-        <PlanetJourney
-          selectedPlanet={selectedPlanet}
-          onExit={() => {
-            setSelectedPlanet(null);
-            setPopUp(true);
-          }}
-        />
-      )}
-
-      {/* Optional: Start quiz button (when not showing quiz) */}
-      {!showQuiz && selectedPlanet && (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <button
-            onClick={() => setShowQuiz(true)}
-            style={{
-              padding: "12px 24px",
-              fontSize: "16px",
-              borderRadius: "8px",
-              backgroundColor: "#1976d2",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
+        {/* Always show the planet journey/info panel if a planet is selected */}
+        {selectedPlanet && (
+          <PlanetJourney
+            selectedPlanet={selectedPlanet}
+            onExit={() => {
+              setSelectedPlanet(null);
+              setPopUp(true);
             }}
-          >
-            Start Quiz
-          </button>
-        </div>
-      )}
+          />
+        )}
+
+        {/* Optional: Start quiz button (when not showing quiz) */}
+        {!showQuiz && selectedPlanet && (
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <button
+              onClick={() => setShowQuiz(true)}
+              style={{
+                padding: "12px 24px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                backgroundColor: "#1976d2",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Start Quiz
+            </button>
+          </div>
+        )}
+      </>
+      } {
+        end && <GameOver/>
+      }
     </>
   );
 }

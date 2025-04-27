@@ -12,6 +12,7 @@ export const TradeProvider = ({ children }) => {
 
   const [fuel, setFuel] = useState(10);
   const [points, setPoints] = useState(0);
+  const [end, setEnd] = useState(false);
 
   const [planetaryResources, setPlanetaryResources] = useState({
     Mercury: [
@@ -115,6 +116,8 @@ export const TradeProvider = ({ children }) => {
         setFuel,
         points,
         setPoints,
+        end,
+        setEnd 
       }}
     >
       {children}
