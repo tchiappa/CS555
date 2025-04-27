@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import TradeContext from "./context/tradeContext";
+import GameContext from "./context/GameContext.jsx";
 
 const MINERALS = 50;
 const FUEL = 20;
@@ -7,7 +7,7 @@ const METALS = 30;
 const OXYGEN = 15;
 
 export const TradingSystem = () => {
-  const { resource, setResource, difficulty } = useContext(TradeContext);
+  const { resource, setResource, difficulty } = useContext(GameContext);
   const tradeMinerals = () => {
     if (resource.minerals < MINERALS) return;
     setResource((prev) => ({
