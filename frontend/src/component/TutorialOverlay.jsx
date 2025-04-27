@@ -1,5 +1,6 @@
 // src/component/TutorialOverlay.jsx
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
+import ContainerContext from "../context/ContainerContext.jsx";
 
 const tutorialSteps = [
   {
@@ -21,75 +22,44 @@ const tutorialSteps = [
     title: "Space Station",
     description: "Visit the space station to refuel by trading in collected resources.",
     emoji: "🔧"
-  }
+  },
   // {
   //   title: "Refuel and Repair",
   //   description: "Visit the ship maintenance panel to refuel and repair using collected resources.",
   //   emoji: "🔧"
   // },
-  // {
-  //   title: "Meet Your Co-Pilot!",
-  //   description: "The AI Co-Pilot will guide you with tips and warnings. Trust your space buddy!",
-  //   emoji: "🤖"
-  // }
+  {
+    title: "Meet Your Co-Pilot!",
+    description: "The AI Co-Pilot will guide you with tips and warnings. Trust your space buddy!",
+    emoji: "🤖"
+  }
 ];
 
 export default function TutorialOverlay({ onFinish }) {
   const [step, setStep] = useState(0);
 
+  const {setSidebarsActive} = useContext(ContainerContext);
+
+  setSidebarsActive(false);
+
   const nextStep = () => {
     if (step < tutorialSteps.length - 1) {
       setStep(step + 1);
     } else {
+      setSidebarsActive(true);
       onFinish();
     }
   };
 
   return (
-    <div style={overlayStyle}>
-      <div style={cardStyle}>
-        <h2>{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
-        <p style={{ fontSize: "16px", marginTop: "10px" }}>{tutorialSteps[step].description}</p>
-        <button onClick={nextStep} style={buttonStyle}>
+    <div className="fixed top-0 left-0 z-[9999] w-screen h-screen bg-black/50 flex justify-center items-center text-white">
+      <div className="bg-black/75 text-white text-center p-20 rounded-4xl w-lg h-lg">
+        <h2 className="text-xl">{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
+        <p className="text-lg mt-5">{tutorialSteps[step].description}</p>
+        <button onClick={nextStep} className="mt-5 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg">
           {step === tutorialSteps.length - 1 ? "Let’s Go!" : "Next »"}
         </button>
       </div>
     </div>
   );
 }
-
-const overlayStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0, 0, 0, 0.9)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 99999,
-  color: "white",
-  fontFamily: "Comic Sans MS, sans-serif"
-};
-
-const cardStyle = {
-  backgroundColor: "#222",
-  padding: "30px",
-  borderRadius: "15px",
-  textAlign: "center",
-  maxWidth: "500px",
-  width: "80%",
-  boxShadow: "0 0 20px rgba(255, 255, 255, 0.2)"
-};
-
-const buttonStyle = {
-  marginTop: "20px",
-  padding: "10px 20px",
-  fontSize: "16px",
-  backgroundColor: "#00bcd4",
-  color: "white",
-  border: "none",
-  borderRadius: "8px",
-  cursor: "pointer"
-};

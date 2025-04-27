@@ -1,17 +1,18 @@
-import {useContext} from "react";
+// src/components/FuelStatus.jsx
+import React, {useContext} from "react";
 import GameContext from "../context/GameContext.jsx";
 
-export function TradeInventory() {
+export default function InventoryStatus() {
     const {playerResources} = useContext(GameContext);
     const inventory = Object.entries(playerResources).filter(
         ([_, count]) => count > 0,
     );
+
     return (
-        <div className="flex-none bg-white/5 border border-teal-400 rounded-lg p-4 w-2/5 overflow-y-auto">
-            <div className="text-center space-y-2 mb-5">
-                <h2 className="text-2xl font-bold">Trade Inventory</h2>
-                <p className="text-sm">Inventory of items to trade for fuel.</p>
-            </div>
+        <div className="my-4 bg-linear-to-br from-emerald-900 to-emerald-950 text-white px-6 py-6 rounded-xl w-3/4">
+            <p className="font-bold mb-4">
+                ⚖️ Inventory
+            </p>
             <ul className="space-y-2">
                 {inventory.map(([name, count]) => (
                     <li className="flex justify-between border-b border-white/10 pb-1">

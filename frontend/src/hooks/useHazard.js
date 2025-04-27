@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import {useContext, useState} from 'react';
 import { hazards } from '../planetInfo/hazards';
+import ContainerContext from "../context/ContainerContext.jsx";
 
 export function useHazard() {
     const [currentHazard, setCurrentHazard] = useState(null); // No hazard yet

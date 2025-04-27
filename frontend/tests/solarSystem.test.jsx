@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import getSun from "../src/getSun.js";
-import getStarfield from "../src/getStarField.js";
-import getPlanet from "../src/getPlanet.js";
-import getElipticLines from "../src/getElipticLines.js";
-import getNebula from "../src/getNebula.js";
+import getSun from "../src/utils/getSun.js";
+import getStarfield from "../src/utils/getStarField.js";
+import getPlanet from "../src/utils/getPlanet.js";
+import getElipticLines from "../src/utils/getElipticLines.js";
+import getNebula from "../src/utils/getNebula.js";
 
 describe('Solar system functions', () => {
     it('should get a THREE.Mesh object for the sun', () => {

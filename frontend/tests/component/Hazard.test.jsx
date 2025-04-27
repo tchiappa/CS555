@@ -1,5 +1,26 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Hazard } from '../../src/component/Hazard'; // Adjust the import path as necessary
+import {GameProviderMock} from "../mocks/GameContextMock.jsx";
+import {ContainerProviderMock} from "../mocks/ContainerContextMock.jsx";
+import userEvent from "@testing-library/user-event";
+
+// Mock the ContainerContext import
+vi.mock('../../src/context/GameContext', async () => {
+    const actual = await vi.importActual('../mocks/GameContextMock.jsx');
+    return {
+        ...actual,
+        default: actual.default,
+    };
+});
+
+// Mock the ContainerContext import
+vi.mock('../../src/context/ContainerContext', async () => {
+    const actual = await vi.importActual('../mocks/ContainerContextMock.jsx');
+    return {
+        ...actual,
+        default: actual.default,
+    };
+});
 
 describe('Hazard', () => {
     const mockOnChooseOption = vi.fn();
@@ -15,8 +36,18 @@ describe('Hazard', () => {
         resolved: null,
     };
 
+    function renderHazard(customHazard = hazard) {
+        render(
+            <GameProviderMock>
+                <ContainerProviderMock>
+                    <Hazard hazard={customHazard} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />
+                </ContainerProviderMock>
+            </GameProviderMock>
+        );
+    }
+
     it('renders correctly when hazard is provided', () => {
-        render(<Hazard hazard={hazard} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />);
+        renderHazard();
 
         expect(screen.getByText('Asteroid Field')).toBeInTheDocument();
         expect(screen.getByText('A dense asteroid field is ahead. Choose your approach.')).toBeInTheDocument();
@@ -24,25 +55,24 @@ describe('Hazard', () => {
         expect(screen.getByText('Go through')).toBeInTheDocument();
     });
 
-    it('calls onChooseOption when an option is selected', () => {
-        render(<Hazard hazard={hazard} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />);
+    it('calls onChooseOption when an option is selected', async () => {
+        renderHazard();
 
         const goAroundButton = screen.getByText('Go around');
-        fireEvent.click(goAroundButton);
+        await userEvent.click(goAroundButton);
 
         expect(mockOnChooseOption).toHaveBeenCalledWith(hazard.options[0]);
     });
 
     it('displays outcome when hazard is resolved', () => {
         const resolvedHazard = { ...hazard, resolved: 'You lost 10 fuel' };
-
-        render(<Hazard hazard={resolvedHazard} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />);
+        renderHazard(resolvedHazard);
 
         expect(screen.getByText('You lost 10 fuel')).toBeInTheDocument();
     });
 
     it('renders nothing if no hazard is provided', () => {
-        render(<Hazard hazard={null} onChooseOption={mockOnChooseOption} onClose={mockOnClose} />);
+        renderHazard(null);
 
         expect(screen.queryByText('Asteroid Field')).not.toBeInTheDocument();
     });
