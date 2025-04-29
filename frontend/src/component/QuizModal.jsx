@@ -6,6 +6,7 @@ function QuizModal({selectedPlanet, onClose}) {
     const [lastAns, setLastAns] = useState(null);
     const [answered, setAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [rewards, setRewards] = useState({});
     const {
         setPlayerResources,
         planetaryResources,
@@ -43,10 +44,17 @@ function QuizModal({selectedPlanet, onClose}) {
                     planetaryResources[selectedPlanet.name][index].name.toString();
                 const value = planetaryResources[selectedPlanet.name][index].value;
                 const prevValue = playerResources[name];
+
                 setPlayerResources((prev) => {
                     prev[name] = (prevValue || 0) + value;
                     return prev;
                 });
+
+                // Track session-specific rewards
+                setRewards((prev) => ({
+                    ...prev,
+                    [name]: (prev[name] || 0) + value,
+                }));
             }
         } else {
             setPoints((prev) => prev - 5);
@@ -86,7 +94,21 @@ function QuizModal({selectedPlanet, onClose}) {
             </div>
 
             {!question ? (
-                <p className="mb-4">No questions available for this planet.</p>
+                <div className="w-96">
+                    <h3 className="text-xl font-bold text-blue-400 mb-4">Quiz Complete!</h3>
+                    <p className="mb-2 font-bold">You earned:</p>
+                    <ul className="mb-4">
+                        {Object.entries(rewards).length === 0 ? (
+                            <li>No additional resources earned.</li>
+                        ) : (
+                            Object.entries(rewards).map(([name, value]) => (
+                                <li key={name}>
+                                    +{value} {name}
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                </div>
             ) : (
                 <>
                     <p className="mb-4 text-xl font-bold">{question.question}</p>
