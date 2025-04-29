@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useHazard } from '../../src/hooks/useHazard'; // Adjust the import path as necessary
+import { useEncounter } from '../../src/hooks/useEncounter.js'; // Adjust the import path as necessary
 
 // Mock the hazards array
 vi.mock('../planetInfo/hazards', () => ({
@@ -11,12 +11,12 @@ vi.mock('../planetInfo/hazards', () => ({
 
 describe('useHazard hook', () => {
     it('should start with no current hazard', () => {
-        const { result } = renderHook(() => useHazard());
+        const { result } = renderHook(() => useEncounter());
         expect(result.current.currentHazard).toBeNull();
     });
 
     it('should trigger a hazard randomly', () => {
-        const { result } = renderHook(() => useHazard());
+        const { result } = renderHook(() => useEncounter());
 
         // Act to trigger a hazard
         act(() => {
@@ -32,7 +32,7 @@ describe('useHazard hook', () => {
     });
 
     it('should resolve a hazard and update the stats', () => {
-        const { result } = renderHook(() => useHazard());
+        const { result } = renderHook(() => useEncounter());
 
         // Trigger a hazard
         act(() => {
@@ -54,7 +54,7 @@ describe('useHazard hook', () => {
     });
 
     it('should clear the current hazard', () => {
-        const { result } = renderHook(() => useHazard());
+        const { result } = renderHook(() => useEncounter());
 
         // Trigger a hazard
         act(() => {
