@@ -14,13 +14,15 @@ import InventoryStatus from "./InventoryStatus.jsx";
 import {ContainerProvider} from "../context/ContainerContext.jsx";
 import SpaceStation from "./SpaceStation.jsx";
 import AICopilot from "./AICopilot.jsx";
+import { EndGame } from "./EndGame.jsx";
+import GameOver from "./GameOver.jsx";
 
 export function Game() {
     const [showTutorial, setShowTutorial] = useState(true);
-    const [selectedPlanet, setSelectedPlanet] = useState(null);
+    // const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [pendingPlanet, setPendingPlanet] = useState(null);
 
-    const {playerResources, setPlayerResources, fuel, setFuel} = useContext(GameContext);
+    const {selectedPlanet, setSelectedPlanet,  setPlayerResources,  setFuel, end} = useContext(GameContext);
 
     // HAZARDS
     const {currentHazard, maybeTriggerHazard, resolveHazard, clearHazard} = useHazard();
@@ -52,7 +54,7 @@ export function Game() {
 
     const handlePlanetSelect = (planet) => {
         console.log("🌍 Planet selected in Scene:", planet);
-
+        // setSelectedPlanet(planet)
         const hazard = maybeTriggerHazard();
 
         if (hazard) {
@@ -82,27 +84,32 @@ export function Game() {
 
             {/* Right now the RightPanel has to come before the LeftPanel for the SpaceStation to show correctly.
             This is not exactly an ideal situation. */}
-            <RightPanel>
-                <FuelStatus />
-                <ScoreStatus />
-                <InventoryStatus />
-                <AICopilot />
-            </RightPanel>
+            {!end &&
+            <>
+                <RightPanel>
+                    <FuelStatus />
+                    <ScoreStatus />
+                    <InventoryStatus />
+                    <AICopilot />
+                    <EndGame/>
+                </RightPanel>
 
-            <LeftPanel>
-                {selectedPlanet ? (
-                    <PlanetJourney
-                        selectedPlanet={selectedPlanet}
-                        onExit={() => setSelectedPlanet(null)}
-                    />
-                ) : (
-                    <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+                <LeftPanel>
+                    {selectedPlanet ? (
+                        <PlanetJourney
+                            selectedPlanet={selectedPlanet}
+                            onExit={() => setSelectedPlanet(null)}
+                        />
+                    ) : (
+                        <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+                    )}
+                </LeftPanel>
+                {selectedPlanet && (
+                    <SpaceStation selectedPlanet={selectedPlanet} />
                 )}
-            </LeftPanel>
-
-            {selectedPlanet && (
-                <SpaceStation selectedPlanet={selectedPlanet} />
-            )}
+            </>
+            }
+            {end && <GameOver/> }
         </ContainerProvider>
     );
 }

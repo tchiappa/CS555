@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import GameContext from '../context/GameContext';
 
-export default function GameOver({ score, onPlayAgain }) {
+export default function GameOver() {
+  const {setEnd, points: score, setFuel, setPoints, setSelectedPlanet} = useContext(GameContext)
+  function onPlayAgain() {
+    setEnd(false);
+    setFuel(10);
+    setPoints(0);
+    setSelectedPlanet(null);
+  }
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Game Over</h1>

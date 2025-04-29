@@ -1,27 +1,25 @@
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 import getSun from "../utils/getSun.js";
 import getPlanet from "../utils/getPlanet.js";
-import getElipticLines from "../utils/getElipticLines.js";
 import getStarfield from "../utils/getStarField.js";
 import getNebula from "../utils/getNebula.js";
+import GameContext from "../context/GameContext.jsx";
 
 export default function SolarSystem() {
 
-    const planetData = [
-        { size: 0.1, distance: 1.25, img: "mercury.png", name: "Mercury", speed: 0.02 },
-        { size: 0.2, distance: 1.65, img: "venus.png", name: "Venus", speed: 0.015 },
-        { size: 0.225, distance: 2.0, img: "earth.png", name: "Earth", speed: 0.01 },
-        { size: 0.15, distance: 2.25, img: "mars.png", name: "Mars", speed: 0.008 },
-        { size: 0.4, distance: 2.75, img: "jupiter.png", name: "Jupiter", speed: 0.005 },
-        { size: 0.35, distance: 3.25, img: "saturn.png", name: "Saturn", speed: 0.004 },
-        { size: 0.3, distance: 3.75, img: "uranus.png", name: "Uranus", speed: 0.003 },
-        { size: 0.3, distance: 4.25, img: "neptune.png", name: "Neptune", speed: 0.002 }
-    ];
+    const {planetData, selectedPlanet} = useContext(GameContext);
+
+    let useAnimatedCamera = true;
+
+    useEffect(()=>{
+    if (selectedPlanet != null){
+      useAnimatedCamera = false;
+    }
+    },[selectedPlanet])
 
     useEffect(() => {
-        let useAnimatedCamera = true;
 
         const cameraDistance = 5;
 
@@ -55,29 +53,6 @@ export default function SolarSystem() {
         setTimeout(() => (useAnimatedCamera = false), 2000);
 
         let animationFrameId;
-        function animate(t = 0) {
-            const time = t * 0.0005;
-
-            solarSystem.children.forEach((child) => {
-                if (child.userData && typeof child.userData.update === "function") {
-                    child.userData.update(time);
-                }
-            });
-
-            renderer.render(scene, camera);
-
-            if (useAnimatedCamera) {
-                camera.position.x = Math.cos(time * 0.75) * cameraDistance;
-                camera.position.y = Math.cos(time * 0.75);
-                camera.position.z = Math.sin(time * 0.75) * cameraDistance;
-                camera.lookAt(0, 0, 0);
-            } else {
-                controls.update();
-            }
-
-            animationFrameId = requestAnimationFrame(animate);
-        }
-
         const sun = getSun();
         solarSystem.add(sun);
 
@@ -115,7 +90,35 @@ export default function SolarSystem() {
             return planet;
         });
 
-        //solarSystem.add(getElipticLines());
+        function animate(t = 0) {
+            const time = t * 0.0005;
+
+            if (selectedPlanet != null){
+            let selectedPlanetIndex = planetData.findIndex((p) => p.name === selectedPlanet.name)
+              const selectedPlanetPosition = new THREE.Vector3();
+              newPlanets[selectedPlanetIndex].getWorldPosition(selectedPlanetPosition);
+              camera.position.copy(selectedPlanetPosition).add(new THREE.Vector3(selectedPlanetPosition.x *.8 , selectedPlanetPosition.y * .8 , selectedPlanetPosition.z  * .8))
+            }
+
+            solarSystem.children.forEach((child) => {
+                if (child.userData && typeof child.userData.update === "function") {
+                    child.userData.update(time);
+                }
+            });
+
+            renderer.render(scene, camera);
+
+            if (useAnimatedCamera) {
+                camera.position.x = Math.cos(time * 0.75) * cameraDistance;
+                camera.position.y = Math.cos(time * 0.75);
+                camera.position.z = Math.sin(time * 0.75) * cameraDistance;
+                camera.lookAt(0, 0, 0);
+            } else {
+                controls.update();
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
 
         scene.add(solarSystem);
         scene.add(getStarfield({numStars: 1000, size: 0.5}));
@@ -165,7 +168,7 @@ export default function SolarSystem() {
                 }
             });
         };
-    }, []);
+    }, [selectedPlanet]);
 
     return (
         <div id="solar_system" className="fixed inset-0 w-screen h-screen -z-10"></div>
