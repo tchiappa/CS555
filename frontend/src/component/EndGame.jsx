@@ -2,10 +2,11 @@ import { useContext } from "react";
 import GameContext from "../context/GameContext";
 
 export const EndGame = () => {
-  const {setEnd} = useContext(GameContext)
+  const {setSelectedPlanet, setEnd} = useContext(GameContext)
   function handleEnd(){
     const confirmed = window.confirm("Are you sure you want to quit?");
     if (confirmed) {
+      setSelectedPlanet(null);
       setEnd(true);
     }
   }
