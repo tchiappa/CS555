@@ -2,8 +2,8 @@ import React, {useEffect, useState, useContext} from "react";
 import {ChoosePlanet} from "./ChoosePlanet.jsx";
 import {PlanetJourney} from "./PlanetJourney.jsx";
 import FuelStatus from "./FuelStatus.jsx";
-import {useHazard} from "../hooks/useHazard.js";
-import {Hazard} from "./Hazard.jsx";
+import {useEncounter} from "../hooks/useEncounter.js";
+import {Encounter} from "./Encounter.jsx";
 import GameContext from "../context/GameContext.jsx";
 import TutorialOverlay from "./TutorialOverlay.jsx";
 import SolarSystem from "./SolarSystem.jsx";
@@ -22,46 +22,26 @@ export function Game() {
     // const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [pendingPlanet, setPendingPlanet] = useState(null);
 
-    const {selectedPlanet, setSelectedPlanet,  setPlayerResources,  setFuel, end} = useContext(GameContext);
+    const {selectedPlanet, setSelectedPlanet, end} = useContext(GameContext);
 
-    // HAZARDS
-    const {currentHazard, maybeTriggerHazard, resolveHazard, clearHazard} = useHazard();
-    const updateStats = ({fuel: fuelChange, resources: resChange}) => {
-        // Update fuel
-        setFuel((f) => Math.max(0, f + fuelChange));
+    // ENCOUNTERS
+    const {currentEncounter, maybeTriggerEncounter, resolveEncounter, clearEncounter} = useEncounter();
 
-        // Update resources with clamping to zero
-        setPlayerResources((prevResources) => {
-            const updatedResources = {...prevResources};
-
-            for (const [key, change] of Object.entries(resChange)) {
-                const current = updatedResources[key] || 0;
-                const newValue = current + change;
-
-                // Prevent values from dropping below 0
-                updatedResources[key] = Math.max(0, newValue);
-            }
-
-            return updatedResources;
-        });
-    };
-
-    const handleHazard = (e) => {
+    const handleEncounter = (e) => {
         setSelectedPlanet(pendingPlanet);
         setPendingPlanet(null);
-        clearHazard();
+        clearEncounter();
     };
 
     const handlePlanetSelect = (planet) => {
         console.log("🌍 Planet selected in Scene:", planet);
-        // setSelectedPlanet(planet)
-        const hazard = maybeTriggerHazard();
+        const encounter = maybeTriggerEncounter();
 
-        if (hazard) {
-            // Store selected planet for later, wait for hazard resolution
+        if (encounter) {
+            // Store selected planet for later, wait for encounter resolution
             setPendingPlanet(planet);
         } else {
-            // No hazard, travel immediately
+            // No encounter, travel immediately
             setSelectedPlanet(planet);
         }
     };
@@ -76,10 +56,10 @@ export function Game() {
                 />
             )}
 
-            <Hazard
-                hazard={currentHazard}
-                onChooseOption={(opt) => resolveHazard(opt, updateStats)}
-                onClose={handleHazard}
+            <Encounter
+                encounter={currentEncounter}
+                onChooseOption={(opt, handleOpt) => resolveEncounter(opt, handleOpt)}
+                onClose={handleEncounter}
             />
 
             {/* Right now the RightPanel has to come before the LeftPanel for the SpaceStation to show correctly.
