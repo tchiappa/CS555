@@ -12,8 +12,8 @@ export const encounters = [
             },
             {
                 text: 'Divert Power to Science Bay to Analyze the Radiation',
-                effects: { fuel: 0, resources: { "Water Ice": -1 } },
-                outcome: 'You gather valuable data, but lose 1 Water Ice due to coolant use.'
+                effects: { fuel: 0, resources: { "Water Ice": -1, "Uranium Pellets": 1 } },
+                outcome: 'You gather a uranium pellet, but lose 1 Water Ice due to coolant use.'
             },
             {
                 text: 'Stay on Course and Absorb the Radiation',
@@ -118,12 +118,12 @@ export const encounters = [
             {
                 text: 'Collect Surface Ice',
                 effects: { fuel: -1, resources: { "Water Ice": 1 } },
-                outcome: 'You match velocity with the comet and gather 1 Water Ice sample.'
+                outcome: 'You match velocity with the comet at the cost of 1 fuel and gather 1 Water Ice sample.'
             },
             {
                 text: 'Drill into Rocky Core',
-                effects: { fuel: -2, resources: { "Iron Ore": 1 } },
-                outcome: 'You burn fuel for a steady approach and extract 1 Iron Ore from the comet’s rocky nucleus.'
+                effects: { fuel: -2, resources: { "Iron Ore": 2 } },
+                outcome: 'You burn 2 fuel for a steady approach and extract 2 Iron Ore from the comet’s rocky nucleus.'
             },
             {
                 text: 'Observe and Move On',
@@ -139,7 +139,7 @@ export const encounters = [
         options: [
             {
                 text: 'Salvage Reactor Housing',
-                effects: { fuel: -2, resources: { "Uranium Pellets": 1 } },
+                effects: { fuel: -2, resources: { "Uranium Pellets": 2 } },
                 outcome: 'You navigate carefully and recover 1 Uranium Pellet from its decaying power core.'
             },
             {
@@ -161,8 +161,8 @@ export const encounters = [
         options: [
             {
                 text: 'Collect Charged Particles',
-                effects: { fuel: -2, resources: { "Red Dust": 1 } },
-                outcome: 'You enter the edge of the storm and gather 1 Red Dust sample.'
+                effects: { fuel: -2, resources: { "Red Dust": 2 } },
+                outcome: 'You enter the edge of the storm at the cost of 2 fuel and gather 2 Red Dust samples.'
             },
             {
                 text: 'Capture Ionized Gases',
@@ -184,12 +184,12 @@ export const encounters = [
             {
                 text: 'Collect Hydrocarbon Samples',
                 effects: { fuel: -1, resources: { "Hydrocarbon Crystals (Titan)": 1 } },
-                outcome: 'You retrieve fragments containing organic molecules and gain 1 Hydrocarbon Crystal.'
+                outcome: 'You retrieve fragments containing organic molecules at the cost of 1 fuel and gain 1 Hydrocarbon Crystal.'
             },
             {
                 text: 'Harvest Ice Particulates',
                 effects: { fuel: -1, resources: { "Ammonia Ice (Enceladus)": 1 } },
-                outcome: 'You filter ice grains and store 1 Ammonia Ice.'
+                outcome: 'You filter ice grains at the cost of 1 fuel and store 1 Ammonia Ice.'
             },
             {
                 text: 'Pass Through at Minimum Power',
@@ -206,12 +206,12 @@ export const encounters = [
             {
                 text: 'Sample Charged Particle Stream',
                 effects: { fuel: -1, resources: { "Supercooled Helium": 1 } },
-                outcome: 'You dip sensors into the stream and recover 1 Supercooled Helium.'
+                outcome: 'You dip sensors into the stream at the cost of 1 fuel and recover 1 Supercooled Helium.'
             },
             {
                 text: 'Collect Exotic Ice Accretions',
-                effects: { fuel: -2, resources: { "Exotic Ices": 1 } },
-                outcome: 'You carefully maneuver to capture rare ices, gaining 1 Exotic Ices.'
+                effects: { fuel: -2, resources: { "Exotic Ices": 2 } },
+                outcome: 'You carefully maneuver at the cost of 2 fuel to capture rare ices, gaining 2 Exotic Ices.'
             },
             {
                 text: 'Log and Monitor Remotely',

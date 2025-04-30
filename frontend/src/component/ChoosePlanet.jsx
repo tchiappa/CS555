@@ -1,8 +1,9 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import GameContext from "../context/GameContext.jsx";
 
-// You can move this to a shared data file if you want reuse
-let planets = [
+export function ChoosePlanet({onPlanetSelect}) {
+    const {fuel, end} = useContext(GameContext);
+    const [planets, setPlanets] = useState([
     {name: "Mercury", symbol: "263F", image: "./giphy.gif", fuelCoast: 2, traveled: false},
     {name: "Venus", symbol: "2640", image: "./vgiphy.gif", fuelCoast: 4, traveled: false},
     {name: "Earth", symbol: "2641", image: "./egiphy.gif", fuelCoast: 6, traveled: false},
@@ -11,11 +12,7 @@ let planets = [
     {name: "Saturn", symbol: "2644", image: "./sgiphy.gif", fuelCoast: 12, traveled: false},
     {name: "Uranus", symbol: "26E2", image: "./ugiphy.gif", fuelCoast: 14, traveled: false},
     {name: "Neptune", symbol: "2646", image: "./ngiphy.gif", fuelCoast: 16, traveled: false}
-];
-
-export function ChoosePlanet({onPlanetSelect}) {
-    const [selectedPlanet, setSelectedPlanet] = useState(null);
-    const {fuel} = useContext(GameContext);
+])
 
     const handleSelection = (planetName) => {
         const found = planets.find((p) => p.name === planetName);
@@ -23,12 +20,23 @@ export function ChoosePlanet({onPlanetSelect}) {
             const updatedPlanets = planets.map((p) =>
                 p.name === planetName ? {...p, traveled: true} : p
             );
-            planets = updatedPlanets; // Update the planets array
-
-            setSelectedPlanet(found); // for preview
+            setPlanets(updatedPlanets)
             onPlanetSelect(found); // for triggering game logic
         }
     };
+
+    useEffect(()=>{
+           setPlanets([
+          {name: "Mercury", symbol: "263F", image: "./giphy.gif", fuelCoast: 2, traveled: false},
+          {name: "Venus", symbol: "2640", image: "./vgiphy.gif", fuelCoast: 4, traveled: false},
+          {name: "Earth", symbol: "2641", image: "./egiphy.gif", fuelCoast: 6, traveled: false},
+          {name: "Mars", symbol: "2642", image: "./mgiphy.gif", fuelCoast: 8, traveled: false},
+          {name: "Jupiter", symbol: "2643", image: "./jgiphy.gif", fuelCoast: 10, traveled: false},
+          {name: "Saturn", symbol: "2644", image: "./sgiphy.gif", fuelCoast: 12, traveled: false},
+          {name: "Uranus", symbol: "26E2", image: "./ugiphy.gif", fuelCoast: 14, traveled: false},
+          {name: "Neptune", symbol: "2646", image: "./ngiphy.gif", fuelCoast: 16, traveled: false}
+      ])
+    }, [end])
 
     return (
         <div id="choose-planet" className="w-full h-full p-5 pb-20 flex flex-col items-stretch justify-start">
