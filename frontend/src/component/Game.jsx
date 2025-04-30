@@ -22,7 +22,8 @@ export function Game() {
     // const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [pendingPlanet, setPendingPlanet] = useState(null);
 
-    const {selectedPlanet, setSelectedPlanet,  setPlayerResources,  setFuel, end} = useContext(GameContext);
+    const {selectedPlanet, setSelectedPlanet, end, setFuel} = useContext(GameContext);
+
     // ENCOUNTERS
     const {currentEncounter, maybeTriggerEncounter, resolveEncounter, clearEncounter} = useEncounter();
 
@@ -34,6 +35,7 @@ export function Game() {
 
     const handlePlanetSelect = (planet) => {
         console.log("🌍 Planet selected in Scene:", planet);
+        setFuel((prev)=> Math.max(0,prev - planet.fuelCoast))
         const encounter = maybeTriggerEncounter();
         if (encounter) {
             // Store selected planet for later, wait for encounter resolution

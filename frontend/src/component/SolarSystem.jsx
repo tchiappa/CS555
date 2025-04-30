@@ -93,11 +93,11 @@ export default function SolarSystem() {
         function animate(t = 0) {
             const time = t * 0.0005;
 
-            if (selectedPlanet != null){
-            let selectedPlanetIndex = planetData.findIndex((p) => p.name === selectedPlanet.name)
-              const selectedPlanetPosition = new THREE.Vector3();
-              newPlanets[selectedPlanetIndex].getWorldPosition(selectedPlanetPosition);
-              camera.position.copy(selectedPlanetPosition).add(new THREE.Vector3(selectedPlanetPosition.x *.8 , selectedPlanetPosition.y * .8 , selectedPlanetPosition.z  * .8))
+            if (selectedPlanet != null) {
+                let selectedPlanetIndex = planetData.findIndex((p) => p.name === selectedPlanet.name)
+                const selectedPlanetPosition = new THREE.Vector3();
+                newPlanets[selectedPlanetIndex].getWorldPosition(selectedPlanetPosition);
+                camera.position.copy(selectedPlanetPosition).add(new THREE.Vector3(selectedPlanetPosition.x * .5, selectedPlanetPosition.y * .5, selectedPlanetPosition.z * .5))
             }
 
             solarSystem.children.forEach((child) => {
