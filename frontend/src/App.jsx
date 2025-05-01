@@ -1,45 +1,38 @@
-import {GameProvider} from "./context/GameContext.jsx";
-import React, {useEffect, useRef, useState} from "react";
+import { GameProvider } from "./context/GameContext.jsx";
+import React, { useEffect, useRef, useState } from "react";
 import backgroundMusic from "./assets/background.mp3";
-import {Game} from "./component/Game.jsx";
+import { Game } from "./component/Game.jsx";
 import Welcome from "./component/Welcome.jsx";
+import LeaderPage from "./pages/Leaderpage.jsx";
 
-function App() {
-    const [start, setStart] = useState(false);
-    const audioRef = useRef(null);
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-    const handleStart = () => {
-        setStart(true); // Show the Scene when button is clicked
+export default function App() {
+  const [start, setStart] = useState(false);
+  const audioRef = useRef(null);
 
-        // Play background music on start
-        if (audioRef.current) {
-            audioRef.current.volume = 0.5;
-            audioRef.current.loop = true;
-            audioRef.current.play().catch((err) => {
-                console.warn('Autoplay prevented:', err);
-            });
-        }
-    };
+  const handleStart = () => {
+    setStart(true);
+    audioRef.current?.play().catch(() => {});
+  };
 
-    // Stop music when unmounted
-    useEffect(() => {
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-            }
-        };
-    }, []);
+  useEffect(() => () => audioRef.current?.pause(), []);
 
-    return (
-        <GameProvider>
-            <audio ref={audioRef} src={backgroundMusic}/>
-            {start ? (
-                <Game/>
-            ) : (
-                <Welcome handleStart={handleStart}/>
-            )}
-        </GameProvider>
-    );
+  return (
+    <GameProvider>
+      <audio ref={audioRef} src={backgroundMusic} volume={0.5} loop />
+
+      <BrowserRouter>
+        <Routes>
+          {/* Home route shows Welcome or Game based on `start` */}
+          <Route
+            path="/"
+            element={start ? <Game /> : <Welcome handleStart={handleStart} />}
+          />
+          {/* Stand-alone leaderboard page */}
+          <Route path="/leaderboard" element={<LeaderPage />} />
+        </Routes>
+      </BrowserRouter>
+    </GameProvider>
+  );
 }
-
-export default App;

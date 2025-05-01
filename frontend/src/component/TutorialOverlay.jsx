@@ -1,5 +1,5 @@
 // src/component/TutorialOverlay.jsx
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import ContainerContext from "../context/ContainerContext.jsx";
 
 const tutorialSteps = [
@@ -37,26 +37,36 @@ const tutorialSteps = [
 
 export default function TutorialOverlay({ onFinish }) {
   const [step, setStep] = useState(0);
+  const { setSidebarsActive } = useContext(ContainerContext);
 
-  const {setSidebarsActive} = useContext(ContainerContext);
-
-  setSidebarsActive(false);
+  // ─── Move sidebar toggle into an effect ───────────────────────
+  useEffect(() => {
+    setSidebarsActive(false);        // hide sidebars when tutorial mounts
+    return () => setSidebarsActive(true);  // restore on unmount
+  }, [setSidebarsActive]);
+  // ───────────────────────────────────────────────────────────────
 
   const nextStep = () => {
     if (step < tutorialSteps.length - 1) {
       setStep(step + 1);
     } else {
-      setSidebarsActive(true);
       onFinish();
     }
   };
 
   return (
-    <div className="fixed top-0 left-0 z-[9999] w-screen h-screen bg-black/50 flex justify-center items-center text-white">
-      <div className="bg-black/75 text-white text-center p-20 rounded-4xl w-lg h-lg">
-        <h2 className="text-xl">{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
-        <p className="text-lg mt-5">{tutorialSteps[step].description}</p>
-        <button onClick={nextStep} className="mt-5 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center text-white">
+      <div className="bg-black/75 text-center p-20 rounded-4xl w-lg h-lg">
+        <h2 className="text-xl">
+          {tutorialSteps[step].emoji} {tutorialSteps[step].title}
+        </h2>
+        <p className="text-lg mt-5">
+          {tutorialSteps[step].description}
+        </p>
+        <button
+          onClick={nextStep}
+          className="mt-5 p-2 px-6 bg-blue-600 hover:bg-blue-800 rounded-lg"
+        >
           {step === tutorialSteps.length - 1 ? "Let’s Go!" : "Next »"}
         </button>
       </div>

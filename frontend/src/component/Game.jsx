@@ -16,6 +16,8 @@ import SpaceStation from "./SpaceStation.jsx";
 import AICopilot from "./AICopilot.jsx";
 import { EndGame } from "./EndGame.jsx";
 import GameOver from "./GameOver.jsx";
+import Leaderboard from "./Leaderboard.jsx";
+
 
 export function Game() {
     const [showTutorial, setShowTutorial] = useState(true);
@@ -89,7 +91,12 @@ export function Game() {
                 )}
             </>
             }
-            {end && <GameOver/> }
+            {end && (
+  <>
+    <GameOver />
+    <Leaderboard />
+  </>
+)}
         </ContainerProvider>
     );
 }
