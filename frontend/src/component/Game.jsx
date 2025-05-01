@@ -16,15 +16,21 @@ import SpaceStation from "./SpaceStation.jsx";
 import AICopilot from "./AICopilot.jsx";
 import { EndGame } from "./EndGame.jsx";
 import GameOver from "./GameOver.jsx";
+import DialogueMockup from "./DialogueMockup.jsx";
+import { MissionControl } from "./MissionControl.jsx";
 
 export function Game() {
     const [showTutorial, setShowTutorial] = useState(true);
-    // const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [pendingPlanet, setPendingPlanet] = useState(null);
-
     const {selectedPlanet, setSelectedPlanet, end, setFuel} = useContext(GameContext);
+    const [showDialogue, setShowDialogue] = useState(false);
+    const [startFuel, setStartFuel] = useState(null);
+    const [missionSummaryData, setMissionSummaryData] = useState({
+        fuelUsedPercent: 0,
+        resourcesCollected: {},
+    });
 
-    // ENCOUNTERS
+    const { playerResources, setPlayerResources, fuel, points } = useContext(GameContext);
     const {currentEncounter, maybeTriggerEncounter, resolveEncounter, clearEncounter} = useEncounter();
 
     const handleEncounter = (e) => {
@@ -35,15 +41,42 @@ export function Game() {
 
     const handlePlanetSelect = (planet) => {
         console.log("🌍 Planet selected in Scene:", planet);
-        setFuel((prev)=> Math.max(0,prev - planet.fuelCoast))
+        const fuelCost = typeof planet.fuelCoast === "number" ? planet.fuelCoast : 0;
+
+        const fuelBeforeTravel = fuel;
+        const fuelAfterTravel = Math.max(0, fuelBeforeTravel - fuelCost);
+
+        setStartFuel(fuelBeforeTravel);
+        setFuel(fuelAfterTravel);
+
         const encounter = maybeTriggerEncounter();
         if (encounter) {
-            // Store selected planet for later, wait for encounter resolution
             setPendingPlanet(planet);
         } else {
-            // No encounter, travel immediately
             setSelectedPlanet(planet);
         }
+    };
+
+    useEffect(() => {
+        setPlayerResources(prev => ({
+            ...prev,
+            oxygen: (prev.oxygen || 0) + 2,
+            water: (prev.water || 0) + 3,
+        }));
+    }, []);
+
+    const handleMissionComplete = () => {
+        const fuelSpent = startFuel - fuel;
+        const fuelUsedPercent = startFuel > 0 ? Math.round((fuel / startFuel) * 100) : 0;
+        const totalResources = Object.values(playerResources).reduce((a, b) => a + b, 0);
+        console.log("📦 playerResources at mission complete:", playerResources);
+
+        setMissionSummaryData({
+            fuelUsedPercent,
+            resourcesCollectedDetail: playerResources,
+            resourcesCollected: totalResources,
+        });
+       
     };
 
     return (
@@ -51,9 +84,7 @@ export function Game() {
             <SolarSystem />
 
             {showTutorial && (
-                <TutorialOverlay
-                    onFinish={() => setShowTutorial(false)}
-                />
+                <TutorialOverlay onFinish={() => setShowTutorial(false)} />
             )}
 
             <Encounter
@@ -62,34 +93,62 @@ export function Game() {
                 onClose={handleEncounter}
             />
 
-            {/* Right now the RightPanel has to come before the LeftPanel for the SpaceStation to show correctly.
-            This is not exactly an ideal situation. */}
-            {!end &&
-            <>
-                <RightPanel>
-                    <FuelStatus />
-                    <ScoreStatus />
-                    <InventoryStatus />
-                    <AICopilot />
-                    <EndGame/>
-                </RightPanel>
+            {!end && (
+                <>
+                    <RightPanel>
+                        <FuelStatus />
+                        <ScoreStatus />
+                        <InventoryStatus />
+                        <AICopilot />
+                        <MissionControl onClick={() => setShowDialogue(true)} />
+                        <EndGame />
+                       
+                    </RightPanel>
 
-                <LeftPanel>
-                    {selectedPlanet ? (
-                        <PlanetJourney
-                            selectedPlanet={selectedPlanet}
-                            onExit={() => setSelectedPlanet(null)}
-                        />
-                    ) : (
-                        <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+                    <LeftPanel>
+                        {selectedPlanet ? (
+                            <PlanetJourney
+                                selectedPlanet={selectedPlanet}
+                                onExit={() => setSelectedPlanet(null)}
+                            />
+                        ) : (
+                            <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+                        )}
+                    </LeftPanel>
+
+                    {selectedPlanet && (
+                        <SpaceStation selectedPlanet={selectedPlanet}
+                        onMissionComplete={handleMissionComplete} />
                     )}
-                </LeftPanel>
-                {selectedPlanet && (
-                    <SpaceStation selectedPlanet={selectedPlanet} />
-                )}
-            </>
-            }
-            {end && <GameOver/> }
+                </>
+            )}
+
+            {showDialogue && (
+                <div
+                    style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        transform: "translate(-50%, -50%)",
+                        zIndex: 2000,
+                        pointerEvents: "auto",
+                        minWidth: "400px",
+                        maxWidth: "90vw",
+                    }}
+                >
+                    <DialogueMockup
+                        onClose={() => setShowDialogue(false)}
+                        fuelUsedPercent={fuel}
+                        pointsEarned={points}
+                        resourcesCollected={playerResources}
+                        currentFuel={fuel}
+                    />
+                </div>
+            )}
+
+            {end && <GameOver />}
         </ContainerProvider>
     );
 }
+
+

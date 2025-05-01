@@ -12,7 +12,7 @@ export default function LeftPanel({children}) {
     }
 
     return (
-        <div className="fixed top-0 left-0 z-[1000] h-screen w-1/4 bg-zinc-900/50 text-white flex flex-col items-center justify-center">
+        <div className=" fixed top-0 left-0 z-[1000] h-screen w-1/4 bg-zinc-900/50 text-white flex flex-col items-center justify-center ">
             {children}
         </div>
     );
