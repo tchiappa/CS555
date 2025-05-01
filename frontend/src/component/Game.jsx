@@ -30,7 +30,7 @@ export function Game() {
         resourcesCollected: {},
     });
 
-    const { playerResources, setPlayerResources, fuel, points } = useContext(GameContext);
+    const { playerResources, fuel, points } = useContext(GameContext);
     const {currentEncounter, maybeTriggerEncounter, resolveEncounter, clearEncounter} = useEncounter();
 
     const handleEncounter = (e) => {
@@ -41,13 +41,9 @@ export function Game() {
 
     const handlePlanetSelect = (planet) => {
         console.log("🌍 Planet selected in Scene:", planet);
-        const fuelCost = typeof planet.fuelCoast === "number" ? planet.fuelCoast : 0;
 
-        const fuelBeforeTravel = fuel;
-        const fuelAfterTravel = Math.max(0, fuelBeforeTravel - fuelCost);
-
-        setStartFuel(fuelBeforeTravel);
-        setFuel(fuelAfterTravel);
+        setStartFuel(fuel);
+        setFuel((prev)=> Math.max(0,prev - planet.fuelCoast))
 
         const encounter = maybeTriggerEncounter();
         if (encounter) {
@@ -56,14 +52,6 @@ export function Game() {
             setSelectedPlanet(planet);
         }
     };
-
-    useEffect(() => {
-        setPlayerResources(prev => ({
-            ...prev,
-            oxygen: (prev.oxygen || 0) + 2,
-            water: (prev.water || 0) + 3,
-        }));
-    }, []);
 
     const handleMissionComplete = () => {
         const fuelSpent = startFuel - fuel;
