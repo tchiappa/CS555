@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/* Hide the docked leaderboard when the body has the helper class */
-.hide-global-leaderboard #global-leaderboard {
-    display: none;
-  }
-
 /*:root {*/
 /*  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
 /*  line-height: 1.5;*/

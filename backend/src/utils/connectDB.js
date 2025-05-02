@@ -1,18 +1,16 @@
 import mongoose from "mongoose";
 
-async function connectDB() {
-  const uri = process.env.MONGO_URI;
-  if (!uri) {
-    console.error("❌ MONGO_URI not defined in .env");
-    process.exit(1);
-  }
-
+export async function connectDB() {
   try {
-    await mongoose.connect(uri);
+    // if (process.env.NODE_ENV === "development") {
+    //   mongoose.createConnection(process.env.dbURI).dropDatabase();
+    // }
 
-    console.log("✅ MongoDB connection successful");
+    await mongoose.connect(process.env.dbURI);
+    console.log("DataBase connection successful");
   } catch (e) {
-    console.error("❌ MongoDB connection failed", e);
+    console.error("DataBase connection failed");
+    console.error(e);
     process.exit(1);
   }
 }

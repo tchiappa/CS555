@@ -1,9 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState, useContext} from "react";
 import QuizModal from "./QuizModal";
 import travelSoundFile from "../assets/spaceship-fly.mp3";
 import {planetDetails} from "../planetInfo/planetDetails";
 import PlanetSummary from "./PlanetSummary.jsx";
 import SpaceStationButton from "./SpaceStationButton.jsx";
+import GameContext from "../context/GameContext.jsx";
 
 export function PlanetJourney({selectedPlanet, onExit}) {
     const [fade, setFade] = useState(true);
@@ -11,6 +12,7 @@ export function PlanetJourney({selectedPlanet, onExit}) {
     const [showSummary, setShowSummary] = useState(true);
     const [showAbout, setShowAbout] = useState(false);
     const [volume, setVolume] = useState(0.5);
+    const { addPlanetExplored, incrementScientificAchievements, incrementMissionsCompleted } = useContext(GameContext);
 
     const travelSoundRef = useRef(null);
 
@@ -20,19 +22,26 @@ export function PlanetJourney({selectedPlanet, onExit}) {
             travelSoundRef.current.volume = volume;
             travelSoundRef.current.play().catch((e) => console.log("Autoplay blocked", e));
         }
+        // Track planet exploration
+        addPlanetExplored(selectedPlanet);
         return () => {
             travelSoundRef.current?.pause();
         };
-    }, [volume]);
+    }, [volume, selectedPlanet]);
 
     const handleAboutClick = () => {
         setShowAbout(true);
         setShowSummary(false);
+        incrementScientificAchievements();
     };
 
     const handleReturnClick = () => {
         setShowAbout(false);
         setShowSummary(true);
+    };
+
+    const handleQuizComplete = () => {
+        incrementMissionsCompleted();
     };
 
     return (
@@ -93,7 +102,7 @@ export function PlanetJourney({selectedPlanet, onExit}) {
                     selectedPlanet={selectedPlanet}
                     onClose={() => {
                         setShowQuiz(false);
-                        //onExit();
+                        handleQuizComplete();
                     }}
                 />
             )}

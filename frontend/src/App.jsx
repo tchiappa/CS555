@@ -1,38 +1,70 @@
-import { GameProvider } from "./context/GameContext.jsx";
-import React, { useEffect, useRef, useState } from "react";
+import {GameProvider} from "./context/GameContext.jsx";
+import React, {useEffect, useRef, useState} from "react";
 import backgroundMusic from "./assets/background.mp3";
-import { Game } from "./component/Game.jsx";
+import {Game} from "./component/Game.jsx";
 import Welcome from "./component/Welcome.jsx";
-import LeaderPage from "./pages/Leaderpage.jsx";
+import Leaderboard from "./component/Leaderboard.jsx";
+import Login from "./component/Login.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+function App() {
+    const [start, setStart] = useState(false);
+    const [showLeaderboard, setShowLeaderboard] = useState(false);
+    const [showLogin, setShowLogin] = useState(true);
+    const audioRef = useRef(null);
 
-export default function App() {
-  const [start, setStart] = useState(false);
-  const audioRef = useRef(null);
+    const handleStart = () => {
+        setStart(true);
+        setShowLeaderboard(false);
+        setShowLogin(false);
 
-  const handleStart = () => {
-    setStart(true);
-    audioRef.current?.play().catch(() => {});
-  };
+        // Play background music on start
+        if (audioRef.current) {
+            audioRef.current.volume = 0.5;
+            audioRef.current.loop = true;
+            audioRef.current.play().catch((err) => {
+                console.warn('Autoplay prevented:', err);
+            });
+        }
+    };
 
-  useEffect(() => () => audioRef.current?.pause(), []);
+    const handleShowLeaderboard = () => {
+        setShowLeaderboard(true);
+        setStart(false);
+        setShowLogin(false);
+    };
 
-  return (
-    <GameProvider>
-      <audio ref={audioRef} src={backgroundMusic} volume={0.5} loop />
+    const handleLogin = () => {
+        setShowLogin(false);
+        setStart(false);
+        setShowLeaderboard(false);
+    };
 
-      <BrowserRouter>
-        <Routes>
-          {/* Home route shows Welcome or Game based on `start` */}
-          <Route
-            path="/"
-            element={start ? <Game /> : <Welcome handleStart={handleStart} />}
-          />
-          {/* Stand-alone leaderboard page */}
-          <Route path="/leaderboard" element={<LeaderPage />} />
-        </Routes>
-      </BrowserRouter>
-    </GameProvider>
-  );
+    // Stop music when unmounted
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+        };
+    }, []);
+
+    return (
+        <AuthProvider>
+            <GameProvider>
+                <audio ref={audioRef} src={backgroundMusic}/>
+                {showLogin ? (
+                    <Login onLogin={handleLogin} />
+                ) : start ? (
+                    <Game onShowLeaderboard={handleShowLeaderboard}/>
+                ) : showLeaderboard ? (
+                    <Leaderboard onBack={() => setShowLeaderboard(false)}/>
+                ) : (
+                    <Welcome handleStart={handleStart} onShowLeaderboard={handleShowLeaderboard}/>
+                )}
+            </GameProvider>
+        </AuthProvider>
+    );
 }
+
+export default App;

@@ -15,9 +15,7 @@ export default function InventoryStatus() {
             </p>
             <ul className="space-y-2">
                 {inventory.map(([name, count]) => (
-                    <li 
-                    key={name}
-                    className="flex justify-between border-b border-white/10 pb-1">
+                    <li key={name} className="flex justify-between border-b border-white/10 pb-1">
                         <span>{name}</span>
                         <span>{count}</span>
                     </li>
