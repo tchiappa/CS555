@@ -18,20 +18,47 @@ import { EndGame } from "./EndGame.jsx";
 import GameOver from "./GameOver.jsx";
 import DialogueMockup from "./DialogueMockup.jsx";
 import { MissionControl } from "./MissionControl.jsx";
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
-export function Game() {
+// Add axios base URL configuration
+axios.defaults.baseURL = 'http://localhost:4000';
+
+export function Game({ onShowLeaderboard }) {
     const [showTutorial, setShowTutorial] = useState(true);
     const [pendingPlanet, setPendingPlanet] = useState(null);
-    const {selectedPlanet, setSelectedPlanet, end, setFuel} = useContext(GameContext);
+    const {selectedPlanet, setSelectedPlanet, end, setFuel, points, fuel, scientificAchievements, missionsCompleted, planetsExplored, playerResources} = useContext(GameContext);
     const [showDialogue, setShowDialogue] = useState(false);
     const [startFuel, setStartFuel] = useState(null);
     const [missionSummaryData, setMissionSummaryData] = useState({
         fuelUsedPercent: 0,
         resourcesCollected: {},
     });
-
-    const { playerResources, fuel, points } = useContext(GameContext);
+    const { user } = useAuth();
     const {currentEncounter, maybeTriggerEncounter, resolveEncounter, clearEncounter} = useEncounter();
+
+    useEffect(() => {
+        if (end) {
+            updateLeaderboard();
+        }
+    }, [end]);
+
+    const updateLeaderboard = async () => {
+        try {
+            const fuelEfficiency = (fuel / 100) * 100; // Calculate fuel efficiency percentage
+            await axios.post('/api/leaderboard/update', {
+                playerId: user.id,
+                playerName: user.name,
+                score: points,
+                fuelEfficiency,
+                scientificAchievements,
+                missionsCompleted,
+                planetsExplored: planetsExplored.map(p => p.name)
+            });
+        } catch (error) {
+            console.error('Error updating leaderboard:', error);
+        }
+    };
 
     const handleEncounter = (e) => {
         setSelectedPlanet(pendingPlanet);
@@ -81,16 +108,21 @@ export function Game() {
                 onClose={handleEncounter}
             />
 
+            {/* Right now the RightPanel has to come before the LeftPanel for the SpaceStation to show correctly.
+            This is not exactly an ideal situation. */}
             {!end && (
                 <>
                     <RightPanel>
-                        <FuelStatus />
-                        <ScoreStatus />
-                        <InventoryStatus />
-                        <AICopilot />
-                        <MissionControl onClick={() => setShowDialogue(true)} />
-                        <EndGame />
-                       
+                        <FuelStatus/>
+                        <ScoreStatus/>
+                        <InventoryStatus/>
+                        <AICopilot/>
+                        <EndGame/>
+                        <button
+                            onClick={onShowLeaderboard}
+                            className="mt-4 p-2 px-4 bg-green-600 hover:bg-green-800 text-white rounded-lg transition">
+                            View Leaderboard
+                        </button>
                     </RightPanel>
 
                     <LeftPanel>
@@ -100,16 +132,16 @@ export function Game() {
                                 onExit={() => setSelectedPlanet(null)}
                             />
                         ) : (
-                            <ChoosePlanet onPlanetSelect={handlePlanetSelect} />
+                            <ChoosePlanet onPlanetSelect={handlePlanetSelect}/>
                         )}
                     </LeftPanel>
 
                     {selectedPlanet && (
                         <SpaceStation selectedPlanet={selectedPlanet}
-                        onMissionComplete={handleMissionComplete} />
+                                      onMissionComplete={handleMissionComplete}/>
                     )}
                 </>
-            )}
+                )}
 
             {showDialogue && (
                 <div

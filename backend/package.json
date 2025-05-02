@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development node --watch-path=./src ./src/server.js",
+    "dev": "set NODE_ENV=development&& node --watch-path=./src ./src/server.js",
     "docker": "NODE_ENV=development node ./src/server.js",
     "test": "vitest"
   },
@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.11.0",

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import ContainerContext from "../context/ContainerContext.jsx";
 import GameContext from "../context/GameContext.jsx";
 
@@ -6,10 +6,16 @@ export function Encounter({ encounter, onChooseOption, onClose }) {
     if (!encounter) return null;
 
     const {setSidebarsActive} = useContext(ContainerContext);
-    setSidebarsActive(false);
-
     const {setPlayerResources, setFuel} = useContext(GameContext);
-    const handleOption = ({fuel: fuelChange, resources: resChange}) => {
+
+    // Move state update to useEffect
+    useEffect(() => {
+        setSidebarsActive(false);
+        // Cleanup function to re-enable sidebars when component unmounts
+        return () => setSidebarsActive(true);
+    }, [setSidebarsActive]);
+
+    const handleOption = React.useCallback(({fuel: fuelChange, resources: resChange}) => {
         // Update fuel
         setFuel((f) => Math.max(0, f + fuelChange));
 
@@ -27,12 +33,12 @@ export function Encounter({ encounter, onChooseOption, onClose }) {
 
             return updatedResources;
         });
-    };
+    }, [setFuel, setPlayerResources]);
 
-    const handleContinue = (e) => {
+    const handleContinue = React.useCallback((e) => {
         onClose(e);
         setSidebarsActive(true);
-    };
+    }, [onClose, setSidebarsActive]);
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]" style={{ background: "url('interstellar.svg')" }}>

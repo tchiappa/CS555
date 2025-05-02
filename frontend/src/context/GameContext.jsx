@@ -5,6 +5,9 @@ const GameContext = createContext({});
 
 export const GameProvider = ({ children }) => {
   const [stationVisits, setStationVisits] = useState(0);
+  const [scientificAchievements, setScientificAchievements] = useState(0);
+  const [missionsCompleted, setMissionsCompleted] = useState(0);
+  const [planetsExplored, setPlanetsExplored] = useState([]);
 
   const [playerResources, setPlayerResources] = useState({
     "Red Dust": 5,
@@ -115,6 +118,20 @@ export const GameProvider = ({ children }) => {
     return planetInfo.questions[newDifficulty].pop();
   }
 
+  const addPlanetExplored = (planet) => {
+    if (!planetsExplored.some(p => p.name === planet.name)) {
+      setPlanetsExplored(prev => [...prev, planet]);
+    }
+  };
+
+  const incrementScientificAchievements = () => {
+    setScientificAchievements(prev => prev + 1);
+  };
+
+  const incrementMissionsCompleted = () => {
+    setMissionsCompleted(prev => prev + 1);
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -136,7 +153,13 @@ export const GameProvider = ({ children }) => {
         setEnd,
         planetData,
         selectedPlanet,
-        setSelectedPlanet
+        setSelectedPlanet,
+        scientificAchievements,
+        incrementScientificAchievements,
+        missionsCompleted,
+        incrementMissionsCompleted,
+        planetsExplored,
+        addPlanetExplored
       }}
     >
       {children}

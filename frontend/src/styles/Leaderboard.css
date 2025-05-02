@@ -1,0 +1,125 @@
+.leaderboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  color: white;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.leaderboard-container h2 {
+  text-align: center;
+  color: #00ff00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  margin: 0;
+}
+
+.back-button {
+  background-color: #333;
+  color: white;
+  border: 1px solid #00ff00;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #444;
+  transform: scale(1.05);
+}
+
+.filter-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.time-filter {
+  padding: 8px 16px;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #00ff00;
+  cursor: pointer;
+}
+
+.player-rank {
+  background-color: rgba(0, 255, 0, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.share-button {
+  background-color: #00ff00;
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.share-button:hover {
+  background-color: #00cc00;
+  transform: scale(1.05);
+}
+
+.leaderboard-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+th {
+  background-color: rgba(0, 255, 0, 0.2);
+  color: #00ff00;
+}
+
+tr:hover {
+  background-color: rgba(0, 255, 0, 0.1);
+}
+
+.current-player {
+  background-color: rgba(0, 255, 0, 0.2);
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .leaderboard-container {
+    padding: 10px;
+  }
+
+  .leaderboard-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .back-button {
+    width: 100%;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 14px;
+  }
+} 
