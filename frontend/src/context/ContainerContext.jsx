@@ -1,4 +1,4 @@
-import {createContext, useState} from "react";
+import {createContext, useState, useCallback} from "react";
 
 const ContainerContext = createContext({});
 
@@ -7,15 +7,28 @@ export const ContainerProvider = ({ children }) => {
     const [tutorialActive, setTutorialActive] = useState(false);
     const [spaceStationActive, setSpaceStationActive] = useState(false);
 
+    // Memoize the state setters to prevent unnecessary re-renders
+    const toggleSidebars = useCallback((value) => {
+        setSidebarsActive(value);
+    }, []);
+
+    const toggleTutorial = useCallback((value) => {
+        setTutorialActive(value);
+    }, []);
+
+    const toggleSpaceStation = useCallback((value) => {
+        setSpaceStationActive(value);
+    }, []);
+
     return (
         <ContainerContext.Provider
             value={{
                 sidebarsActive,
-                setSidebarsActive,
+                setSidebarsActive: toggleSidebars,
                 tutorialActive,
-                setTutorialActive,
+                setTutorialActive: toggleTutorial,
                 spaceStationActive,
-                setSpaceStationActive
+                setSpaceStationActive: toggleSpaceStation
             }}>
             {children}
         </ContainerContext.Provider>

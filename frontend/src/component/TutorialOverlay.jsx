@@ -1,5 +1,5 @@
 // src/component/TutorialOverlay.jsx
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import ContainerContext from "../context/ContainerContext.jsx";
 
 const tutorialSteps = [
@@ -15,7 +15,7 @@ const tutorialSteps = [
   },
   {
     title: "Answer Science Quizzes",
-    description: "Upon arrival, you’ll face fun science questions. Answer them to collect minerals and fuel.",
+    description: "Upon arrival, you'll face fun science questions. Answer them to collect minerals and fuel.",
     emoji: "🧠"
   },
   {
@@ -37,10 +37,14 @@ const tutorialSteps = [
 
 export default function TutorialOverlay({ onFinish }) {
   const [step, setStep] = useState(0);
-
   const {setSidebarsActive} = useContext(ContainerContext);
 
-  setSidebarsActive(false);
+  // Move the state update to useEffect
+  useEffect(() => {
+    setSidebarsActive(false);
+    // Cleanup function to re-enable sidebars when component unmounts
+    return () => setSidebarsActive(true);
+  }, [setSidebarsActive]);
 
   const nextStep = () => {
     if (step < tutorialSteps.length - 1) {
@@ -57,7 +61,7 @@ export default function TutorialOverlay({ onFinish }) {
         <h2 className="text-xl">{tutorialSteps[step].emoji} {tutorialSteps[step].title}</h2>
         <p className="text-lg mt-5">{tutorialSteps[step].description}</p>
         <button onClick={nextStep} className="mt-5 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-white disabled:text-zinc-400 mb-2 rounded-lg">
-          {step === tutorialSteps.length - 1 ? "Let’s Go!" : "Next »"}
+          {step === tutorialSteps.length - 1 ? "Let's Go!" : "Next »"}
         </button>
       </div>
     </div>

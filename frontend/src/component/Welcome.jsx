@@ -1,14 +1,85 @@
-const Welcome = ({handleStart}) => {
+import React from "react";
+import '../styles/Welcome.css';
+
+export default function Welcome({ handleStart, onShowLeaderboard }) {
     return (
-        <div className="bg-zinc-900 h-screen w-screen flex flex-col items-center justify-center text-white">
-            <h1 className="text-5xl font-bold mb-6">Interstellar Voyager</h1>
-            <p className="text-lg text-center max-w-2xl">
-                Embark on an educational space exploration journey! Choose your starting planet, answer space
-                trivia, and collect resources as you travel through the solar system.
-            </p>
-            <button onClick={handleStart} className="mt-8 p-2 px-6 bg-blue-600 hover:bg-blue-800 disabled:bg-zinc-600 text-lg font-semibold text-white disabled:text-zinc-400 mb-2 rounded-lg transition">Start Exploration</button>
+        <div className="welcome-container">
+            <div className="stars"></div>
+            <div className="twinkling"></div>
+            
+            <div className="welcome-content">
+                <div className="planet-animation">
+                    <div className="planet">
+                        <div className="ring"></div>
+                        <div className="surface"></div>
+                    </div>
+                    <div className="astronaut">
+                        <div className="astronaut-body"></div>
+                        <div className="astronaut-pack"></div>
+                        <div className="astronaut-helmet"></div>
+                    </div>
+                </div>
+
+                <h1 className="welcome-title">
+                    <span className="title-emoji">🚀</span>
+                    Space Explorer
+                    <span className="title-emoji">🌎</span>
+                </h1>
+
+                <div className="welcome-description">
+                    <p>Embark on an epic journey through the cosmos!</p>
+                    <p>Explore planets, solve mysteries, and become a legendary space explorer.</p>
+                </div>
+
+                <div className="button-container">
+                    <button 
+                        onClick={handleStart}
+                        className="start-adventure-btn"
+                    >
+                        Start Adventure! 
+                        <span className="button-emoji">🌟</span>
+                    </button>
+                    
+                    <button 
+                        onClick={onShowLeaderboard}
+                        className="leaderboard-btn"
+                    >
+                        View Hall of Fame 
+                        <span className="button-emoji">🏆</span>
+                    </button>
+                </div>
+
+                <div className="feature-grid">
+                    <div className="feature-item">
+                        <span className="feature-icon">🌍</span>
+                        <h3>Explore Planets</h3>
+                        <p>Visit amazing worlds</p>
+                    </div>
+                    <div className="feature-item">
+                        <span className="feature-icon">🧪</span>
+                        <h3>Conduct Research</h3>
+                        <p>Make discoveries</p>
+                    </div>
+                    <div className="feature-item">
+                        <span className="feature-icon">⭐</span>
+                        <h3>Earn Points</h3>
+                        <p>Become a legend</p>
+                    </div>
+                    <div className="feature-item">
+                        <span className="feature-icon">🎯</span>
+                        <h3>Complete Missions</h3>
+                        <p>Face challenges</p>
+                    </div>
+                </div>
+
+                <div className="floating-elements">
+                    <span className="float-item">🌠</span>
+                    <span className="float-item">🪐</span>
+                    <span className="float-item">☄️</span>
+                    <span className="float-item">🌍</span>
+                    <span className="float-item">🚀</span>
+                </div>
+            </div>
         </div>
     );
-};
-
-export default Welcome;
+}

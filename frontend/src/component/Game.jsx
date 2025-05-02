@@ -16,16 +16,44 @@ import SpaceStation from "./SpaceStation.jsx";
 import AICopilot from "./AICopilot.jsx";
 import { EndGame } from "./EndGame.jsx";
 import GameOver from "./GameOver.jsx";
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
-export function Game() {
+// Add axios base URL configuration
+axios.defaults.baseURL = 'http://localhost:4000';
+
+export function Game({ onShowLeaderboard }) {
     const [showTutorial, setShowTutorial] = useState(true);
     // const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [pendingPlanet, setPendingPlanet] = useState(null);
-
-    const {selectedPlanet, setSelectedPlanet, end, setFuel} = useContext(GameContext);
+    const { user } = useAuth();
+    const {selectedPlanet, setSelectedPlanet, end, setFuel, points, fuel, scientificAchievements, missionsCompleted, planetsExplored} = useContext(GameContext);
 
     // ENCOUNTERS
     const {currentEncounter, maybeTriggerEncounter, resolveEncounter, clearEncounter} = useEncounter();
+
+    useEffect(() => {
+        if (end) {
+            updateLeaderboard();
+        }
+    }, [end]);
+
+    const updateLeaderboard = async () => {
+        try {
+            const fuelEfficiency = (fuel / 100) * 100; // Calculate fuel efficiency percentage
+            await axios.post('/api/leaderboard/update', {
+                playerId: user.id,
+                playerName: user.name,
+                score: points,
+                fuelEfficiency,
+                scientificAchievements,
+                missionsCompleted,
+                planetsExplored: planetsExplored.map(p => p.name)
+            });
+        } catch (error) {
+            console.error('Error updating leaderboard:', error);
+        }
+    };
 
     const handleEncounter = (e) => {
         setSelectedPlanet(pendingPlanet);
@@ -72,6 +100,12 @@ export function Game() {
                     <InventoryStatus />
                     <AICopilot />
                     <EndGame/>
+                    <button 
+                        onClick={onShowLeaderboard}
+                        className="mt-4 p-2 px-4 bg-green-600 hover:bg-green-800 text-white rounded-lg transition"
+                    >
+                        View Leaderboard
+                    </button>
                 </RightPanel>
 
                 <LeftPanel>
